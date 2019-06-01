@@ -1,0 +1,44 @@
+{
+  "name": "frlluc-utils",
+  "version": "1.0.0",
+  "description": "A simple project containing a few QOL utils for TypeScript",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "test:coverage": "jest --config jestconfig.json --coverage",
+    "build": "tsc",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CalionVarduk/ts-utils.git"
+  },
+  "keywords": [
+    "calionvarduk",
+    "frlluc",
+    "utils"
+  ],
+  "author": "CalionVarduk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CalionVarduk/ts-utils/issues"
+  },
+  "homepage": "https://github.com/CalionVarduk/ts-utils#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "coveralls": "^3.0.3",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  }
+}
