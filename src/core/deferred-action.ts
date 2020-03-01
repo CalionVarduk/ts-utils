@@ -10,7 +10,7 @@ export type DeferredActionParams<TArgs = any> =
     action(args?: TArgs): void;
 };
 
-/** Represets a deferred function execution environment. */
+/** Represents a deferred function execution environment. */
 export class DeferredAction<TArgs = any>
 {
     /** Returns whether or not the action is in the middle of being invoked. */

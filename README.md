@@ -17,8 +17,6 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 ## B. Types
 
-There are a few util types and interfaces:
-
 - [DeepReadonly\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/types/deep-readonly.ts#L2) - represents a deep readonly `T` type.
 
 - [IDeepReadonlyArray\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/types/deep-readonly.ts#L14) - an interface that extends the `ReadonlyArray<DeepReadonly<T>>` interface.
@@ -154,3 +152,19 @@ result.trim(); // runtime error, instead of a compilation error
 ```
 
 - [wait](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/wait.ts) - creates a promise that resolves after the specified amount of time (in milliseconds).
+
+## D. Classes
+
+- [DeferredAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/deferred-action.ts) - represents an action that should be invoked after a specified amount of time has passed. This class allows e.g. to create a simple debouncing mechanism, since every new invocation request resets the timer.
+
+- [EventHandler\<TEvent, TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/event.ts#L39) - represents a simple event handler, that allows for event publishing and event subscription. An [IEvent\<TEvent, TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/event.ts#L5) interface can be used to encapsulate the handler and allow your class consumers to only subscribe to the event, removing the option to publish it as well.
+
+- [Flag\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/flag.ts) - represents a simple flag or switch object, whose value can be changed.
+
+- [Lazy\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/lazy.ts) - represents a lazily initialized object.
+
+- [Mixin\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/mixin.ts) - represents a mixin object that can be merged together with other objects.
+
+- [RepeatedAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/repeated-action.ts) - represents a stoppable action that is continuously invoked at a specified interval. This class allows e.g. to create a simple polling mechanism, that stops after a desired result has been achieved.
+
+- [StopWatch](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/stopwatch.ts) - represents a simple stopwatch object that allows to measure the passage of time. Its accurracy is somewhat limited, so unless you are ok with measurement errors of up to `~50ms`, then this is not a tool for you.
