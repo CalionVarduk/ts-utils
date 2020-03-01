@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/CalionVarduk/ts-utils.png?branch=master)](https://travis-ci.com/CalionVarduk/ts-utils)
 [![Coverage Status](https://coveralls.io/repos/github/CalionVarduk/ts-utils/badge.svg)](https://coveralls.io/github/CalionVarduk/ts-utils)
-[![npm version](https://badge.fury.io/js/frlluc-utils.svg)](https://www.npmjs.com/package/frlluc-utils)
+[![npm version](https://badge.fury.io/js/frl-ts-utils.svg)](https://www.npmjs.com/package/frl-ts-utils)
 [![Dependency status](https://david-dm.org/CalionVarduk/ts-utils/status.svg)](https://david-dm.org/CalionVarduk/ts-utils)
 [![Dev Dependency Status](https://david-dm.org/CalionVarduk/ts-utils/dev-status.svg)](https://david-dm.org/CalionVarduk/ts-utils?type=dev)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/CalionVarduk/ts-utils/blob/master/LICENSE)
