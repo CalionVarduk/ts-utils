@@ -67,7 +67,7 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 - [makeRef\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/types/ref.ts#L12) - creates a new `Ref<T>` object with the provided value.
 
-- [Assert](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#L21) - a namespace containing a few useful assertion functions. These assertion functions either pass and return the provided parameter (except for [Assert.True](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#166) and [Assert.False](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#178) functions) or throw an `Error`.
+- [Assert](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#L21) - a namespace containing a few useful assertion functions. These assertion functions either pass and return the provided parameter (except for [Assert.True](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#L166) and [Assert.False](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/assert.ts#L178) functions) or throw an `Error`.
 
 - [deepFreeze\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/core/functions/deep-freeze.ts) - recursively deep freezes the provided object and its properties, and returns it as `DeepReadonly<T>`.
 
