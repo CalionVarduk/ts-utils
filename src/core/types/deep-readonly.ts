@@ -1,3 +1,5 @@
+import { reinterpretCast } from '../functions/reinterpret-cast';
+
 /** Deep readonly type alias. */
 export type DeepReadonly<T> =
 {
@@ -18,3 +20,8 @@ export interface IDeepReadonlyMap<K, V> extends ReadonlyMap<DeepReadonly<K>, Dee
 
 /** Deep readonly set interface. */
 export interface IDeepReadonlySet<T> extends ReadonlySet<DeepReadonly<T>> {}
+
+export function toDeepReadonly<T>(obj: T): DeepReadonly<T>
+{
+    return reinterpretCast<DeepReadonly<T>>(obj);
+}
