@@ -1,15 +1,15 @@
 import { DeepReadonly } from '../types/deep-readonly';
 
-export type UnorderedMapEntry<TKey, TValue> =
+export type MapEntry<TKey, TValue> =
 {
     readonly key: DeepReadonly<TKey>;
     readonly value: TValue;
 };
 
-export function makeUnorderedMapEntry<TKey, TValue>(
+export function makeMapEntry<TKey, TValue>(
     key: DeepReadonly<TKey>,
     value: TValue):
-    UnorderedMapEntry<TKey, TValue>
+    MapEntry<TKey, TValue>
 {
     return {
         key: key,

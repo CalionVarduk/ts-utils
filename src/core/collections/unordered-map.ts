@@ -1,4 +1,4 @@
-import { UnorderedMapEntry, makeUnorderedMapEntry } from './unordered-map-entry';
+import { MapEntry, makeMapEntry } from './map-entry';
 import { IReadonlyUnorderedMap } from './readonly-unordered-map.interface';
 import { Ensured } from '../types/ensured';
 import { reinterpretCast } from '../functions/reinterpret-cast';
@@ -34,13 +34,13 @@ export class UnorderedMap<TKey, TValue>
 
     public readonly stringifier: Stringifier<TKey>;
 
-    private readonly _map: Map<string, UnorderedMapEntry<TKey, TValue>>;
+    private readonly _map: Map<string, MapEntry<TKey, TValue>>;
 
     public constructor(
         stringifier: Stringifier<TKey> = k => reinterpretCast<any>(k).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
-        this._map = new Map<string, UnorderedMapEntry<TKey, TValue>>();
+        this._map = new Map<string, MapEntry<TKey, TValue>>();
     }
 
     public get(key: DeepReadonly<TKey>): TValue
@@ -74,7 +74,7 @@ export class UnorderedMap<TKey, TValue>
 
         if (isUndefined(entry))
         {
-            entry = makeUnorderedMapEntry(key, defaultValueProvider());
+            entry = makeMapEntry(key, defaultValueProvider());
             this._map.set(stringifiedKey, entry);
         }
         return entry.value;
@@ -87,7 +87,7 @@ export class UnorderedMap<TKey, TValue>
         if (this._map.has(stringifiedKey))
             throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] already exists.`);
 
-        this._map.set(stringifiedKey, makeUnorderedMapEntry(key, value));
+        this._map.set(stringifiedKey, makeMapEntry(key, value));
     }
 
     public tryAdd(key: DeepReadonly<TKey>, value: TValue): boolean
@@ -97,14 +97,14 @@ export class UnorderedMap<TKey, TValue>
         if (this._map.has(stringifiedKey))
             return false;
 
-        this._map.set(stringifiedKey, makeUnorderedMapEntry(key, value));
+        this._map.set(stringifiedKey, makeMapEntry(key, value));
         return true;
     }
 
     public set(key: DeepReadonly<TKey>, value: TValue): void
     {
         const stringifiedKey = stringifyKey(key, this.stringifier);
-        this._map.set(stringifiedKey, makeUnorderedMapEntry(key, value));
+        this._map.set(stringifiedKey, makeMapEntry(key, value));
     }
 
     public delete(key: DeepReadonly<TKey>): void
@@ -138,12 +138,12 @@ export class UnorderedMap<TKey, TValue>
             yield entry.value;
     }
 
-    public entries(): Iterable<UnorderedMapEntry<TKey, TValue>>
+    public entries(): Iterable<MapEntry<TKey, TValue>>
     {
         return this._map.values();
     }
 
-    public [Symbol.iterator](): IterableIterator<UnorderedMapEntry<TKey, TValue>>
+    public [Symbol.iterator](): IterableIterator<MapEntry<TKey, TValue>>
     {
         return this._map.values();
     }

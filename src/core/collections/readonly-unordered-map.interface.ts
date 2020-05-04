@@ -1,11 +1,11 @@
-import { UnorderedMapEntry } from './unordered-map-entry';
+import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
 import { Undefinable } from '../types/undefinable';
 import { Stringifier } from './stringifier';
 
 export interface IReadonlyUnorderedMap<TKey, TValue>
     extends
-    Iterable<UnorderedMapEntry<TKey, TValue>>
+    Iterable<MapEntry<TKey, TValue>>
 {
     readonly length: number;
     readonly isEmpty: boolean;
@@ -16,5 +16,5 @@ export interface IReadonlyUnorderedMap<TKey, TValue>
     has(key: DeepReadonly<TKey>): boolean;
     keys(): Iterable<DeepReadonly<TKey>>;
     values(): Iterable<TValue>;
-    entries(): Iterable<UnorderedMapEntry<TKey, TValue>>;
+    entries(): Iterable<MapEntry<TKey, TValue>>;
 }
