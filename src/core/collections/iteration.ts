@@ -12,6 +12,7 @@ import { KeySelector } from './key-selector';
 import { isUndefined } from '../functions/is-undefined';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions';
+import { Pair, makePair } from './pair';
 
 function safeDeepReadonlyCast<T>(
     obj: T):
@@ -176,7 +177,7 @@ export namespace Iteration
     export function* Zip<T, U>(
         source: Iterable<T>,
         other: Iterable<U>):
-        Iterable<[T, U]>
+        Iterable<Pair<T, U>>
     {
         const sourceIterator = source[Symbol.iterator]();
         const otherIterator = other[Symbol.iterator]();
@@ -185,7 +186,7 @@ export namespace Iteration
 
         while (!sourceCurrent.done && !otherCurrent.done)
         {
-            yield [sourceCurrent.value, otherCurrent.value];
+            yield makePair(sourceCurrent.value, otherCurrent.value);
             sourceCurrent = sourceIterator.next();
             otherCurrent = otherIterator.next();
         }
