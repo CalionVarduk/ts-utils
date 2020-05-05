@@ -1,7 +1,7 @@
 import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
-import { Undefinable } from '../types/undefinable';
 import { EnsuredStringifier } from '../stringifier';
+import { Nullable } from '../types/nullable';
 
 export interface IReadonlyUnorderedMap<TKey, TValue>
     extends
@@ -12,7 +12,7 @@ export interface IReadonlyUnorderedMap<TKey, TValue>
     readonly stringifier: EnsuredStringifier<TKey>;
 
     get(key: DeepReadonly<TKey>): TValue;
-    tryGet(key: DeepReadonly<TKey>): Undefinable<TValue>;
+    tryGet(key: DeepReadonly<TKey>): Nullable<TValue>;
     has(key: DeepReadonly<TKey>): boolean;
     keys(): Iterable<DeepReadonly<TKey>>;
     values(): Iterable<TValue>;

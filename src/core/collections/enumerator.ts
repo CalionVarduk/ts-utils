@@ -8,7 +8,7 @@ import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Pair } from './pair';
 import { EnsuredStringifier } from '../stringifier';
 import { KeySelector } from './key-selector';
-import { Undefinable } from '../types/undefinable';
+import { Nullable } from '../types/nullable';
 
 export class Enumerator<T>
     implements
@@ -147,7 +147,7 @@ export class Enumerator<T>
         keySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: T, otherObj: Undefinable<U>, index: number) => TResult,
+        resultMapper: (sourceObj: Ensured<T>, otherObj: Nullable<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Enumerator<TResult>
     {
@@ -159,7 +159,7 @@ export class Enumerator<T>
         keySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: T, otherObj: U, index: number) => TResult,
+        resultMapper: (sourceObj: Ensured<T>, otherObj: Ensured<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Enumerator<TResult>
     {
@@ -171,7 +171,7 @@ export class Enumerator<T>
         keySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: Undefinable<T>, otherObj: Undefinable<U>, index: number) => TResult,
+        resultMapper: (sourceObj: Nullable<T>, otherObj: Nullable<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Enumerator<TResult>
     {
@@ -266,7 +266,7 @@ export class Enumerator<T>
     }
 
     public tryFirst():
-        Undefinable<T>
+        Nullable<T>
     {
         return Iteration.TryFirst(this._iterable);
     }
@@ -278,7 +278,7 @@ export class Enumerator<T>
     }
 
     public tryLast():
-        Undefinable<T>
+        Nullable<T>
     {
         return Iteration.TryLast(this._iterable);
     }
@@ -292,7 +292,7 @@ export class Enumerator<T>
 
     public tryAt(
         index: number):
-        Undefinable<T>
+        Nullable<T>
     {
         return Iteration.TryAt(this._iterable, index);
     }
@@ -304,7 +304,7 @@ export class Enumerator<T>
     }
 
     public trySingle():
-        Undefinable<T>
+        Nullable<T>
     {
         return Iteration.TrySingle(this._iterable);
     }

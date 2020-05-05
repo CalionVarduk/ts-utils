@@ -3,7 +3,6 @@ import { Nullable } from '../types/nullable';
 import { isNull } from '../functions/is-null';
 import { IReadonlyList } from './readonly-list.interface';
 import { isUndefined, instanceOfCast } from '../functions';
-import { Undefinable } from '../types';
 
 function link<T>(first: ListNode<T>, second: ListNode<T>): void
 {
@@ -131,10 +130,10 @@ export class List<T>
         return node;
     }
 
-    public pop(): Undefinable<T>
+    public pop(): Nullable<T>
     {
         if (this.isEmpty)
-            return void(0);
+            return null;
 
         const result = this._last!.value;
 
@@ -162,10 +161,10 @@ export class List<T>
         return node;
     }
 
-    public unshift(): Undefinable<T>
+    public unshift(): Nullable<T>
     {
         if (this.isEmpty)
-            return void(0);
+            return null;
 
         const result = this._first!.value;
 

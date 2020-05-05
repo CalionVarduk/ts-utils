@@ -5,8 +5,8 @@ import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
 import { DeepReadonly } from '../types/deep-readonly';
 import { isUndefined } from '../functions/is-undefined';
-import { Undefinable } from '../types/undefinable';
 import { EnsuredStringifier } from '../stringifier';
+import { Nullable } from '../types/nullable';
 
 function stringifyKey<TKey>(
     key: DeepReadonly<TKey>,
@@ -54,11 +54,11 @@ export class UnorderedMap<TKey, TValue>
         return entry.value;
     }
 
-    public tryGet(key: DeepReadonly<TKey>): Undefinable<TValue>
+    public tryGet(key: DeepReadonly<TKey>): Nullable<TValue>
     {
         const stringifiedKey = stringifyKey(key, this.stringifier);
         const entry = this._map.get(stringifiedKey);
-        return isUndefined(entry) ? void(0) : entry.value;
+        return isUndefined(entry) ? null : entry.value;
     }
 
     public has(key: DeepReadonly<TKey>): boolean

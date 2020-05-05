@@ -7,12 +7,11 @@ import { isDefined } from '../functions/is-defined';
 import { EnsuredStringifier } from '../stringifier';
 import { Ensured } from '../types/ensured';
 import { toDeepReadonly, DeepReadonly } from '../types/deep-readonly';
-import { Undefinable } from '../types/undefinable';
 import { KeySelector } from './key-selector';
-import { isUndefined } from '../functions/is-undefined';
 import { reinterpretCast } from '../functions/reinterpret-cast';
-import { Assert } from '../functions';
+import { Assert, isNull } from '../functions';
 import { Pair, makePair } from './pair';
+import { Nullable } from '../types/nullable';
 
 function safeDeepReadonlyCast<T>(
     obj: T):
@@ -252,7 +251,7 @@ export namespace Iteration
         sourceKeySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: T, otherObj: Undefinable<U>, index: number) => TResult,
+        resultMapper: (sourceObj: Ensured<T>, otherObj: Nullable<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Iterable<TResult>
     {
@@ -263,7 +262,7 @@ export namespace Iteration
         {
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
             const otherObj = otherMap.tryGet(key);
-            yield resultMapper(sourceObj, otherObj, index++);
+            yield resultMapper(sourceObj!, otherObj, index++);
         }
     }
 
@@ -272,7 +271,7 @@ export namespace Iteration
         sourceKeySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: T, otherObj: U, index: number) => TResult,
+        resultMapper: (sourceObj: Ensured<T>, otherObj: Ensured<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Iterable<TResult>
     {
@@ -284,10 +283,10 @@ export namespace Iteration
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
             const otherObj = otherMap.tryGet(key);
 
-            if (isUndefined(otherObj))
+            if (isNull(otherObj))
                 continue;
 
-            yield resultMapper(sourceObj, otherObj, index++);
+            yield resultMapper(sourceObj!, otherObj, index++);
         }
     }
 
@@ -296,7 +295,7 @@ export namespace Iteration
         sourceKeySelector: KeySelector<TKey, T>,
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
-        resultMapper: (sourceObj: Undefinable<T>, otherObj: Undefinable<U>, index: number) => TResult,
+        resultMapper: (sourceObj: Nullable<T>, otherObj: Nullable<U>, index: number) => TResult,
         keyStringifier?: EnsuredStringifier<TKey>):
         Iterable<TResult>
     {
@@ -308,7 +307,7 @@ export namespace Iteration
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
             const otherObj = otherMap.tryGet(key);
 
-            if (!isUndefined(otherObj))
+            if (!isNull(otherObj))
                 otherMap.tryDelete(key);
 
             yield resultMapper(sourceObj, otherObj, index++);
@@ -318,7 +317,7 @@ export namespace Iteration
             const key = otherKeySelector(safeDeepReadonlyCast(otherObj));
 
             if (otherMap.has(key))
-                yield resultMapper(void(0), otherObj, index++);
+                yield resultMapper(null, otherObj, index++);
         }
     }
 
@@ -519,11 +518,11 @@ export namespace Iteration
 
     export function TryFirst<T>(
         source: Iterable<T>):
-        Undefinable<T>
+        Nullable<T>
     {
         const iterator = source[Symbol.iterator]();
         const result = iterator.next();
-        return result.done ? void(0) : result.value;
+        return result.done ? null : result.value;
     }
 
     export function Last<T>(
@@ -549,13 +548,13 @@ export namespace Iteration
 
     export function TryLast<T>(
         source: Iterable<T>):
-        Undefinable<T>
+        Nullable<T>
     {
         const iterator = source[Symbol.iterator]();
         let current = iterator.next();
 
         if (current.done)
-            return void(0);
+            return null;
 
         let result = current;
         current = iterator.next();
@@ -586,12 +585,12 @@ export namespace Iteration
     export function TryAt<T>(
         source: Iterable<T>,
         index: number):
-        Undefinable<T>
+        Nullable<T>
     {
         source = Iteration.Skip(source, index);
         const iterator = source[Symbol.iterator]();
         const result = iterator.next();
-        return result.done ? void(0) : result.value;
+        return result.done ? null : result.value;
     }
 
     export function Single<T>(
@@ -612,11 +611,11 @@ export namespace Iteration
 
     export function TrySingle<T>(
         source: Iterable<T>):
-        Undefinable<T>
+        Nullable<T>
     {
         const iterator = source[Symbol.iterator]();
         const result = iterator.next();
-        return result.done || !iterator.next().done ? void(0) : result.value;
+        return result.done || !iterator.next().done ? null : result.value;
     }
 
     export function ToArray<T>(
@@ -651,7 +650,7 @@ export namespace Iteration
         for (const obj of source)
         {
             const key = keySelector(safeDeepReadonlyCast(obj));
-            const value = valueSelector(reinterpretCast<Ensured<T>>(obj));
+            const value = valueSelector(obj!);
             result.tryAdd(key, value);
         }
         return result;
