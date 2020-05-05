@@ -8,4 +8,5 @@ export * from './is-undefined';
 export * from './primitive-cast';
 export * from './readonly-cast';
 export * from './reinterpret-cast';
+export * from './using';
 export * from './wait';
