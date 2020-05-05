@@ -1,7 +1,6 @@
 import { IReadonlyUnorderedSet } from './readonly-unordered-set.interface';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { reinterpretCast } from '../functions/reinterpret-cast';
-import { Ensured } from '../types/ensured';
 import { Assert } from '../functions/assert';
 import { EnsuredStringifier } from '../stringifier';
 
@@ -10,8 +9,7 @@ function stringifyObject<T>(
     stringifier: EnsuredStringifier<T>): string
 {
     return stringifier(
-        reinterpretCast<Ensured<DeepReadonly<T>>>(
-            Assert.IsDefined(obj, 'obj')));
+            Assert.IsDefined(obj, 'obj')!);
 }
 
 export class UnorderedSet<T>
@@ -33,7 +31,7 @@ export class UnorderedSet<T>
     private readonly _map: Map<string, T>;
 
     public constructor(
-        stringifier: EnsuredStringifier<T> = o => reinterpretCast<any>(o).toString())
+        stringifier: EnsuredStringifier<T> = o => reinterpretCast<object>(o).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
         this._map = new Map<string, T>();

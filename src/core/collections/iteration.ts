@@ -21,6 +21,12 @@ function safeDeepReadonlyCast<T>(
         Assert.IsDefined(obj, 'obj'));
 }
 
+function removeEnsured<T>(
+    obj: Ensured<T>): T
+{
+    return obj;
+}
+
 export namespace Iteration
 {
     export function* Empty<T>(): Iterable<T> {}
@@ -261,7 +267,7 @@ export namespace Iteration
         for (const sourceObj of source)
         {
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(key);
+            const otherObj = otherMap.tryGet(removeEnsured(key));
             yield resultMapper(sourceObj!, otherObj, index++);
         }
     }
@@ -281,7 +287,7 @@ export namespace Iteration
         for (const sourceObj of source)
         {
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(key);
+            const otherObj = otherMap.tryGet(removeEnsured(key));
 
             if (isNull(otherObj))
                 continue;
@@ -305,10 +311,10 @@ export namespace Iteration
         for (const sourceObj of source)
         {
             const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(key);
+            const otherObj = otherMap.tryGet(removeEnsured(key));
 
             if (!isNull(otherObj))
-                otherMap.tryDelete(key);
+                otherMap.tryDelete(removeEnsured(key));
 
             yield resultMapper(sourceObj, otherObj, index++);
         }
@@ -316,7 +322,7 @@ export namespace Iteration
         {
             const key = otherKeySelector(safeDeepReadonlyCast(otherObj));
 
-            if (otherMap.has(key))
+            if (otherMap.has(removeEnsured(key)))
                 yield resultMapper(null, otherObj, index++);
         }
     }
@@ -365,10 +371,10 @@ export namespace Iteration
         for (const obj of source)
         {
             const key = keySelector(safeDeepReadonlyCast(obj));
-            const group = result.getOrAdd(key, () =>
+            const group = result.getOrAdd(removeEnsured(key), () =>
                 {
                     const defaultGroup: IGrouping<TKey, T> = {
-                        key: key,
+                        key: removeEnsured(key),
                         items: []
                     };
                     return defaultGroup;
@@ -651,7 +657,7 @@ export namespace Iteration
         {
             const key = keySelector(safeDeepReadonlyCast(obj));
             const value = valueSelector(obj!);
-            result.tryAdd(key, value);
+            result.tryAdd(removeEnsured(key), value);
         }
         return result;
     }

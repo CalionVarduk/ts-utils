@@ -1,6 +1,5 @@
 import { MapEntry, makeMapEntry } from './map-entry';
 import { IReadonlyUnorderedMap } from './readonly-unordered-map.interface';
-import { Ensured } from '../types/ensured';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
 import { DeepReadonly } from '../types/deep-readonly';
@@ -14,8 +13,7 @@ function stringifyKey<TKey>(
     string
 {
     return stringifier(
-        reinterpretCast<Ensured<DeepReadonly<TKey>>>(
-            Assert.IsDefined(key, 'key')));
+        Assert.IsDefined(key, 'key')!);
 }
 
 export class UnorderedMap<TKey, TValue>
@@ -37,7 +35,7 @@ export class UnorderedMap<TKey, TValue>
     private readonly _map: Map<string, MapEntry<TKey, TValue>>;
 
     public constructor(
-        stringifier: EnsuredStringifier<TKey> = k => reinterpretCast<any>(k).toString())
+        stringifier: EnsuredStringifier<TKey> = k => reinterpretCast<object>(k).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
         this._map = new Map<string, MapEntry<TKey, TValue>>();
