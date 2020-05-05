@@ -179,7 +179,7 @@ export class List<T>
 
     public delete(node: IReadonlyListNode<T>): void
     {
-        const listNode = instanceOfCast(ListNode, node);
+        const listNode = instanceOfCast<ListNode<T>>(ListNode, node);
         if (isNull(listNode) || listNode.list !== this)
             throw new Error('node doesn\'t belong to this list');
 
@@ -197,7 +197,7 @@ export class List<T>
 
     public insertAfter(obj: T, target: IReadonlyListNode<T>): IReadonlyListNode<T>
     {
-        const listTarget = instanceOfCast(ListNode, target);
+        const listTarget = instanceOfCast<ListNode<T>>(ListNode, target);
         if (isNull(listTarget) || listTarget.list !== this)
             throw new Error('node doesn\'t belong to this list');
 
@@ -217,7 +217,7 @@ export class List<T>
 
     public insertBefore(obj: T, target: IReadonlyListNode<T>): IReadonlyListNode<T>
     {
-        const listTarget = instanceOfCast(ListNode, target);
+        const listTarget = instanceOfCast<ListNode<T>>(ListNode, target);
         if (isNull(listTarget) || listTarget.list !== this)
             throw new Error('node doesn\'t belong to this list');
 
