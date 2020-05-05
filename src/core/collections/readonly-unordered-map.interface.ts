@@ -1,7 +1,7 @@
 import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
 import { Undefinable } from '../types/undefinable';
-import { Stringifier } from './stringifier';
+import { EnsuredStringifier } from '../stringifier';
 
 export interface IReadonlyUnorderedMap<TKey, TValue>
     extends
@@ -9,7 +9,7 @@ export interface IReadonlyUnorderedMap<TKey, TValue>
 {
     readonly length: number;
     readonly isEmpty: boolean;
-    readonly stringifier: Stringifier<TKey>;
+    readonly stringifier: EnsuredStringifier<TKey>;
 
     get(key: DeepReadonly<TKey>): TValue;
     tryGet(key: DeepReadonly<TKey>): Undefinable<TValue>;

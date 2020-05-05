@@ -6,11 +6,11 @@ import { Assert } from '../functions/assert';
 import { DeepReadonly } from '../types/deep-readonly';
 import { isUndefined } from '../functions/is-undefined';
 import { Undefinable } from '../types/undefinable';
-import { Stringifier } from './stringifier';
+import { EnsuredStringifier } from '../stringifier';
 
 function stringifyKey<TKey>(
     key: DeepReadonly<TKey>,
-    stringifier: Stringifier<TKey>):
+    stringifier: EnsuredStringifier<TKey>):
     string
 {
     return stringifier(
@@ -32,12 +32,12 @@ export class UnorderedMap<TKey, TValue>
         return this.length === 0;
     }
 
-    public readonly stringifier: Stringifier<TKey>;
+    public readonly stringifier: EnsuredStringifier<TKey>;
 
     private readonly _map: Map<string, MapEntry<TKey, TValue>>;
 
     public constructor(
-        stringifier: Stringifier<TKey> = k => reinterpretCast<any>(k).toString())
+        stringifier: EnsuredStringifier<TKey> = k => reinterpretCast<any>(k).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
         this._map = new Map<string, MapEntry<TKey, TValue>>();
