@@ -15,22 +15,22 @@ export interface IEvent<TEvent = any, TArgs = any>
 
     /**
      * Adds another `listener`.
-     * @param listener function that will be invoked when the event is published
-     * @returns `this`
+     * @param listener Function that will be invoked when the event is published.
+     * @returns `this`.
      */
     addListener(listener: EventDelegate<TEvent, TArgs>): this;
 
     /**
      * Checks whether or not the `listener` is attached to the event.
-     * @param listener function to check
-     * @returns `true`, if `listener` is attached to the event, otherwise `false`
+     * @param listener Function to check.
+     * @returns `true`, if `listener` is attached to the event, otherwise `false`.
      */
     containsListener(listener: EventDelegate<TEvent, TArgs>): boolean;
 
     /**
      * Removes `listener` from the event.
-     * @param listener function to remove
-     * @returns `true`, if `listener` was attached to the event and was removed successfuly, otherwise `false`
+     * @param listener Function to remove.
+     * @returns `true`, if `listener` was attached to the event and was removed successfuly, otherwise `false`.
      */
     removeListener(listener: EventDelegate<TEvent, TArgs>): boolean;
 }
@@ -52,7 +52,7 @@ export class EventHandler<TEvent = any, TArgs = any> implements IEvent<TEvent, T
 
     /**
      * Creates a new event object.
-     * @param type event type
+     * @param type Event type.
      */
     public constructor(type: Readonly<TEvent>)
     {
@@ -90,8 +90,8 @@ export class EventHandler<TEvent = any, TArgs = any> implements IEvent<TEvent, T
 
     /**
      * Publishes the event with the provided arguments.
-     * @param args event arguments
-     * @returns `this`
+     * @param args Event arguments.
+     * @returns `this`.
      */
     public publish(sender?: any, args?: TArgs): this
     {

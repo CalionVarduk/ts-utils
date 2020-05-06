@@ -15,6 +15,7 @@ export type RepeatedActionParams<TArgs = any> =
 {
     /** Time frequency in milliseconds with which the action will be executed. */
     intervalMs: number;
+
     /** Action to be executed. */
     action(args?: TArgs): RepeatedActionResult;
 };
@@ -45,7 +46,7 @@ export class RepeatedAction<TArgs = any>
 
     /**
      * Creates a new repeated action object.
-     * @param params repeated action's parameters
+     * @param params Repeated action's parameters.
      */
     public constructor(params: RepeatedActionParams<TArgs>)
     {
@@ -57,7 +58,7 @@ export class RepeatedAction<TArgs = any>
 
     /**
      * Starts the action's invocation loop. If an invocation loop was already taking place, then it will be restarted.
-     * @param args optional action's arguments
+     * @param args Optional action's arguments.
      */
     public invoke(args?: TArgs): void
     {
@@ -75,7 +76,7 @@ export class RepeatedAction<TArgs = any>
 
     /**
      * Stops the action's invocation loop, if it is running.
-     * @returns `true` if the invocation loop in progress has been stopped, otherwise `false`
+     * @returns `true` if the invocation loop in progress has been stopped, otherwise `false`.
      */
     public stop(): boolean
     {

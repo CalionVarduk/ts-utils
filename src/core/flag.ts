@@ -11,7 +11,7 @@ export class Flag<T = boolean>
 
     /**
      * Creates a new flag object.
-     * @param value flag value to start with
+     * @param value Flag value to start with.
      */
     public constructor(value: T)
     {
@@ -20,8 +20,8 @@ export class Flag<T = boolean>
 
     /**
      * Replaces the current value with the new value, and returns the old value.
-     * @param value new flag value
-     * @returns old value
+     * @param value New flag value.
+     * @returns Old value.
      */
     public exchange(value: T): T
     {
@@ -32,7 +32,7 @@ export class Flag<T = boolean>
 
     /**
      * Changes the current value.
-     * @param value new flag value
+     * @param value New flag value.
      */
     public update(value: T): void
     {

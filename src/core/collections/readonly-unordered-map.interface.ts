@@ -1,6 +1,6 @@
 import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { Nullable } from '../types/nullable';
 
 export interface IReadonlyUnorderedMap<TKey, TValue>

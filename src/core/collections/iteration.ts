@@ -1,10 +1,10 @@
 import { UnorderedSet } from './unordered-set';
 import { UnorderedMap } from './unordered-map';
 import { IReadonlyUnorderedMap } from './readonly-unordered-map.interface';
-import { IGrouping } from './grouping.interface';
+import { Grouping, makeGrouping } from './grouping';
 import { Optional } from '../types/optional';
 import { isDefined } from '../functions/is-defined';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { Ensured } from '../types/ensured';
 import { toDeepReadonly, DeepReadonly } from '../types/deep-readonly';
 import { KeySelector } from './key-selector';
@@ -13,8 +13,8 @@ import { isNull, isUndefined, isInstanceOfType } from '../functions';
 import { Pair, makePair } from './pair';
 import { Nullable } from '../types/nullable';
 import { Undefinable } from '../types';
-import { EqualityComparer } from '../equality-comparer';
-import { Comparer } from '../comparer';
+import { EqualityComparer } from '../types/equality-comparer';
+import { Comparer } from '../types/comparer';
 
 export namespace Iteration
 {
@@ -378,21 +378,14 @@ export namespace Iteration
         source: Iterable<T>,
         keySelector: KeySelector<TKey, T>,
         keyStringifier?: Stringifier<TKey>):
-        IReadonlyUnorderedMap<TKey, IGrouping<TKey, T>>
+        IReadonlyUnorderedMap<TKey, Grouping<TKey, T>>
     {
-        const result = new UnorderedMap<TKey, IGrouping<TKey, T>>(keyStringifier);
+        const result = new UnorderedMap<TKey, Grouping<TKey, T>>(keyStringifier);
 
         for (const obj of source)
         {
             const key = keySelector(toDeepReadonly(obj));
-            const group = result.getOrAdd(key, () =>
-                {
-                    const defaultGroup: IGrouping<TKey, T> = {
-                        key: key,
-                        items: []
-                    };
-                    return defaultGroup;
-                });
+            const group = result.getOrAdd(key, () => makeGrouping<TKey, T>(key, []));
             reinterpretCast<T[]>(group.items).push(obj);
         }
         return result;

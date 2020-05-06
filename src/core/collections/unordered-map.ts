@@ -4,7 +4,7 @@ import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
 import { DeepReadonly } from '../types/deep-readonly';
 import { isUndefined } from '../functions/is-undefined';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { Nullable } from '../types/nullable';
 
 export class UnorderedMap<TKey, TValue>

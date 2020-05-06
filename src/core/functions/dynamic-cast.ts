@@ -13,10 +13,10 @@ export type SafeCast<TType extends ObjectType | PrimitiveTypeNames> =
 
 /**
  * Casts an object to the provided type, if that object is of that type.
- * @param targetType type to cast to
- * @param obj object to cast
- * @returns if type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`,
- * then `obj` cast to `TType`, otherwise `null`
+ * @param targetType Type to cast to.
+ * @param obj Object to cast.
+ * @returns If type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`,
+ * then `obj` cast to `TType`, otherwise `null`.
  * */
 export function dynamicCast<TType extends ObjectType | PrimitiveTypeNames>(
     targetType: TType,
@@ -30,9 +30,9 @@ export function dynamicCast<TType extends ObjectType | PrimitiveTypeNames>(
 
 /**
  * Checks whether or not an object is of the provided type.
- * @param targetType type to check
- * @param obj object to check
- * @returns if type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`, then `true`, otherwise `false`
+ * @param targetType Type to check.
+ * @param obj Object to check.
+ * @returns If type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`, then `true`, otherwise `false`.
  */
 export function isOfType<TType extends ObjectType | PrimitiveTypeNames>(
     targetType: TType,

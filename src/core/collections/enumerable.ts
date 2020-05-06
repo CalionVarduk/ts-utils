@@ -1,19 +1,19 @@
 import { Iteration } from './iteration';
 import { IReadonlyUnorderedMap } from './readonly-unordered-map.interface';
-import { IGrouping } from './grouping.interface';
+import { Grouping } from './grouping';
 import { UnorderedSet } from './unordered-set';
 import { UnorderedMap } from './unordered-map';
 import { Ensured } from '../types/ensured';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Pair } from './pair';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { KeySelector } from './key-selector';
 import { Nullable } from '../types/nullable';
 import { NotNull } from '../types/not-null';
 import { NotUndefined } from '../types/not-undefined';
-import { Comparer } from '../comparer';
+import { Comparer } from '../types/comparer';
 import { DeepReadonly } from '../types';
-import { EqualityComparer } from '../equality-comparer';
+import { EqualityComparer } from '../types/equality-comparer';
 
 export class Enumerable<T>
     implements
@@ -230,7 +230,7 @@ export class Enumerable<T>
     public groupBy<TKey>(
         keySelector: KeySelector<TKey, T>,
         keyStringifier?: Stringifier<TKey>):
-        IReadonlyUnorderedMap<TKey, IGrouping<TKey, T>>
+        IReadonlyUnorderedMap<TKey, Grouping<TKey, T>>
     {
         return Iteration.GroupBy(this._iterable, keySelector, keyStringifier);
     }

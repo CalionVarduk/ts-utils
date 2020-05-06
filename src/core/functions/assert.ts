@@ -22,10 +22,10 @@ export namespace Assert
 {
     /**
      * Asserts whether or not the `obj` is not `null` and not `undefined`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is `null` or `undefined`
-     * @returns defined `obj`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is `null` or `undefined`.
+     * @returns Defined `obj`.
      */
     export function IsDefined<T>(obj: Optional<T>, paramName?: string): T
     {
@@ -37,10 +37,10 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `obj` is `null` or `undefined`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is not `null` and not `undefined`
-     * @returns `null` or `undefined`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is not `null` and not `undefined`.
+     * @returns `null` or `undefined`.
      */
     export function IsNullOrUndefined<T>(obj: Optional<T>, paramName?: string): None
     {
@@ -52,10 +52,10 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `obj` is not `null`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is `null`
-     * @returns non-`null` `obj`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is `null`.
+     * @returns Non-`null` `obj`.
      */
     export function IsNotNull<T>(obj: Nullable<T>, paramName?: string): T
     {
@@ -67,10 +67,10 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `obj` is `null`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is not `null`
-     * @returns `null`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is not `null`.
+     * @returns `null`.
      */
     export function IsNull<T>(obj: Nullable<T>, paramName?: string): null
     {
@@ -82,10 +82,10 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `obj` is not `undefined`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is `undefined`
-     * @returns non-`undefined` `obj`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is `undefined`.
+     * @returns Non-`undefined` `obj`.
      */
     export function IsNotUndefined<T>(obj: Undefinable<T>, paramName?: string): T
     {
@@ -97,10 +97,10 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `obj` is `undefined`, and returns it.
-     * @param obj object to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `obj` is not `undefined`
-     * @returns `undefined`
+     * @param obj Object to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `obj` is not `undefined`.
+     * @returns `undefined`.
      */
     export function IsUndefined<T>(obj: Undefinable<T>, paramName?: string): undefined
     {
@@ -112,14 +112,17 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `collection` is empty, and returns it.
-     * @param collection collection to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `collection` is not empty
-     * @returns empty `collection`
+     * @param collection Collection to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `collection` is not empty.
+     * @returns Empty `collection`.
      */
-    export function IsEmpty<T extends { length: number }>(collection: T, paramName?: string): T
+    export function IsEmpty<T extends Iterable<any>>(collection: T, paramName?: string): T
     {
-        if (collection.length > 0)
+        const iterator = collection[Symbol.iterator]();
+        const first = iterator.next();
+
+        if (!first.done)
             throw new Error(buildParamError('must be empty', paramName));
 
         return collection;
@@ -127,14 +130,17 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `collection` is not empty, and returns it.
-     * @param collection collection to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `collection` is empty
-     * @returns non-empty `collection`
+     * @param collection Collection to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `collection` is empty.
+     * @returns Non-empty `collection`.
      */
-    export function IsNotEmpty<T extends { length: number }>(collection: T, paramName?: string): T
+    export function IsNotEmpty<T extends Iterable<any>>(collection: T, paramName?: string): T
     {
-        if (collection.length === 0)
+        const iterator = collection[Symbol.iterator]();
+        const first = iterator.next();
+
+        if (first.done === true)
             throw new Error(buildParamError('must not be empty', paramName));
 
         return collection;
@@ -142,26 +148,25 @@ export namespace Assert
 
     /**
      * Asserts whether or not the `collection` contains defined elements only, and returns it.
-     * @param collection collection to check
-     * @param paramName parameter name to be included in the error message
-     * @throws `Error` when `collection` contains at least one `null` or `undefined` element
-     * @returns `collection` without any `null` or `undefined` elements
+     * @param collection Collection to check.
+     * @param paramName Parameter name to be included in the error message.
+     * @throws `Error` when `collection` contains at least one `null` or `undefined` element.
+     * @returns `collection` without any `null` or `undefined` elements.
      */
-    export function ContainsDefinedOnly<T extends { forEach(c: (o: any) => void): void }>(collection: T, paramName?: string): T
+    export function ContainsDefinedOnly<T extends Iterable<any>>(collection: T, paramName?: string): T
     {
-        collection.forEach(o =>
-        {
-            if (!isDefined(o))
+        for (const obj of collection)
+            if (!isDefined(obj))
                 throw new Error(buildParamError('must not contain any null or undefined elements', paramName));
-        });
+
         return collection;
     }
 
     /**
      * Asserts that the provided `condition` evaluates to `true`.
-     * @param condition condition to check
-     * @param message an error message, or an error message provider function
-     * @throws `Error` when `condition` evaluates to `false`
+     * @param condition Condition to check.
+     * @param message An error message, or an error message provider function.
+     * @throws `Error` when `condition` evaluates to `false`.
      */
     export function True(condition: boolean, message?: string | (() => string)): void
     {
@@ -171,9 +176,9 @@ export namespace Assert
 
     /**
      * Asserts that the provided `condition` evaluates to `false`.
-     * @param condition condition to check
-     * @param message an error message, or an error message provider function
-     * @throws `Error` when `condition` evaluates to `true`
+     * @param condition Condition to check.
+     * @param message An error message, or an error message provider function.
+     * @throws `Error` when `condition` evaluates to `true`.
      */
     export function False(condition: boolean, message?: string | (() => string)): void
     {

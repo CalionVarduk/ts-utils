@@ -76,6 +76,7 @@ class ListNode<T>
     }
 }
 
+/** Represents a linked list data structure. */
 export class List<T>
     implements
     IReadonlyList<T>
@@ -104,6 +105,10 @@ export class List<T>
     private _last: Nullable<ListNode<T>>;
     private _length: number;
 
+    /**
+     * Creates a new List object.
+     * @param collection An optional collection to initialize the list with.
+     */
     public constructor(collection?: Iterable<T>)
     {
         this._first = null;
@@ -115,6 +120,11 @@ export class List<T>
                 this.push(obj);
     }
 
+    /**
+     * Adds a new node to the end of the list.
+     * @param obj New node's value.
+     * @returns New node.
+     */
     public push(obj: T): IReadonlyListNode<T>
     {
         const node = new ListNode<T>(this, obj);
@@ -130,6 +140,10 @@ export class List<T>
         return node;
     }
 
+    /**
+     * Removes the last node from the list and returns its value.
+     * @returns removed node's value, if the list is not empty, otherwise `null`.
+     */
     public pop(): Nullable<T>
     {
         if (this.isEmpty)
@@ -146,6 +160,11 @@ export class List<T>
         return result;
     }
 
+    /**
+     * Adds a new node to the start of the list.
+     * @param obj New node's value.
+     * @returns New node.
+     */
     public shift(obj: T): IReadonlyListNode<T>
     {
         const node = new ListNode<T>(this, obj);
@@ -161,6 +180,10 @@ export class List<T>
         return node;
     }
 
+    /**
+     * Removes the first node from the list and returns its value.
+     * @returns removed node's value, if the list is not empty, otherwise `null`.
+     */
     public unshift(): Nullable<T>
     {
         if (this.isEmpty)
@@ -177,6 +200,11 @@ export class List<T>
         return result;
     }
 
+    /**
+     * Removes a node from the list.
+     * @param node Node to remove.
+     * @throws If the `node` doesn't belong to the list.
+     */
     public delete(node: IReadonlyListNode<T>): void
     {
         const listNode = instanceOfCast<ListNode<T>>(ListNode, node);
@@ -195,6 +223,13 @@ export class List<T>
         --this._length;
     }
 
+    /**
+     * Inserts a new node to the list after the specified `target` node.
+     * @param obj New node's value.
+     * @param target Node to insert a new node after.
+     * @throws If the `target` node doesn't belong to the list.
+     * @returns New node.
+     */
     public insertAfter(obj: T, target: IReadonlyListNode<T>): IReadonlyListNode<T>
     {
         const listTarget = instanceOfCast<ListNode<T>>(ListNode, target);

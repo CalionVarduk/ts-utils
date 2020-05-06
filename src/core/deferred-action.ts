@@ -6,6 +6,7 @@ export type DeferredActionParams<TArgs = any> =
 {
     /** Time in milliseconds after which the action will be executed. */
     timeoutMs: number;
+
     /** Action to be executed. */
     action(args?: TArgs): void;
 };
@@ -29,7 +30,7 @@ export class DeferredAction<TArgs = any>
 
     /**
      * Creates a new deferred action object.
-     * @param params deferred action's parameters
+     * @param params Deferred action's parameters.
      */
     public constructor(params: DeferredActionParams<TArgs>)
     {
@@ -40,7 +41,7 @@ export class DeferredAction<TArgs = any>
 
     /**
      * Starts the action's invocation. If an invocation was already taking place, then the timer will be restarted.
-     * @param args optional action's arguments
+     * @param args Optional action's arguments.
      */
     public invoke(args?: TArgs): void
     {
@@ -55,7 +56,7 @@ export class DeferredAction<TArgs = any>
 
     /**
      * Stops the action's invocation, if it is taking place.
-     * @returns `true` if the invocation in progress has been stopped, otherwise `false`
+     * @returns `true` if the invocation in progress has been stopped, otherwise `false`.
      */
     public stop(): boolean
     {

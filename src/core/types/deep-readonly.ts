@@ -24,6 +24,11 @@ export interface IDeepReadonlyMap<K, V> extends ReadonlyMap<DeepReadonly<K>, Dee
 /** Deep readonly set interface. */
 export interface IDeepReadonlySet<T> extends ReadonlySet<DeepReadonly<T>> {}
 
+/**
+ * Forces the object to be treated as `DeepReadonly`.
+ * @param obj Object to cast.
+ * @returns `obj` cast to `DeepReadonly<T>` type.
+ * */
 export function toDeepReadonly<T>(obj: T): DeepReadonly<T>
 {
     return reinterpretCast<DeepReadonly<T>>(obj);

@@ -2,7 +2,7 @@ import { IReadonlyUnorderedSet } from './readonly-unordered-set.interface';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 
 export class UnorderedSet<T>
     implements

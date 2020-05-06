@@ -5,8 +5,8 @@ import { isNull } from './is-null';
 
 /**
  * Deep freezes the `obj` recursively and returns it.
- * @param obj object to deep freeze
- * @returns deep frozen `obj`
+ * @param obj Object to deep freeze.
+ * @returns Deep frozen `obj`.
  */
 export function deepFreeze<T = any>(obj: T): DeepReadonly<T>
 {

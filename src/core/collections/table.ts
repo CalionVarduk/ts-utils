@@ -4,7 +4,7 @@ import { MapEntry, makeMapEntry } from './map-entry';
 import { IReadonlyTable } from './readonly-table.interface';
 import { IReadonlyTableIndex } from './readonly-table-index.interface';
 import { KeySelector } from './key-selector';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { Assert } from '../functions/assert';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { Nullable } from '../types/nullable';

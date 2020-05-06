@@ -1,7 +1,7 @@
 import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
 import { Nullable } from '../types/nullable';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { KeySelector } from './key-selector';
 
 export interface IReadonlyTableIndex<TKey, TEntity>

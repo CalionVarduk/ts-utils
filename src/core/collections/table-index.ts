@@ -2,7 +2,7 @@ import { UnorderedMap } from './unordered-map';
 import { MapEntry } from './map-entry';
 import { IReadonlyTableIndex } from './readonly-table-index.interface';
 import { KeySelector } from './key-selector';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { Nullable } from '../types';
 import { isNull } from '../functions/is-null';

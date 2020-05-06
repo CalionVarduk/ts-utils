@@ -4,9 +4,9 @@ import { EmptyObject } from './types';
 
 /**
  * Creates a new object that contains members from both `a` and `b`.
- * @param a first object to mix
- * @param b second object to mix
- * @returns new object created from `a` and `b`
+ * @param a First object to mix.
+ * @param b Second object to mix.
+ * @returns New object created from `a` and `b`.
  */
 export function makeMixin<T extends EmptyObject, U extends EmptyObject>(a: T, b: U): T & U
 {
@@ -21,7 +21,7 @@ export class Mixin<T extends EmptyObject>
 
     /**
      * Creates a new mixin object.
-     * @param value mixin's value
+     * @param value Mixin's value.
      */
     public constructor(value: T)
     {
@@ -30,8 +30,8 @@ export class Mixin<T extends EmptyObject>
 
     /**
      * Creates a new mixin object that combines `this` and `other` mixin's values.
-     * @param other mixin to combine with
-     * @returns new mixin object that combines `this.value` and `other.value` together
+     * @param other Mixin to combine with.
+     * @returns New mixin object that combines `this.value` and `other.value` together.
      */
     public and<U extends EmptyObject>(other: Mixin<U> | U): Mixin<T & U>
     {

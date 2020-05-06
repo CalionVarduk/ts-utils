@@ -9,4 +9,4 @@ export * from './core/lazy';
 export * from './core/mixin';
 export * from './core/repeated-action';
 export * from './core/stopwatch';
-export * from './core/stringifier';
+export * from './core/types/stringifier';

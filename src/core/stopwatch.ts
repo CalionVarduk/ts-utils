@@ -33,7 +33,7 @@ export class StopWatch
 
     /**
      * Creates a new stopwatch object.
-     * @param start if `true`, then the new stopwatch object starts activated
+     * @param start If `true`, then the new stopwatch object starts activated.
      */
     public constructor(start?: boolean)
     {
@@ -44,7 +44,7 @@ export class StopWatch
 
     /**
      * Starts the stopwatch, if it isn't running already.
-     * @returns `true` if the stopwatch hasn't been running already, otherwise `false`
+     * @returns `true` if the stopwatch hasn't been running already, otherwise `false`.
      */
     public start(): boolean
     {
@@ -57,7 +57,7 @@ export class StopWatch
 
     /**
      * Stops the stopwatch, if it is running.
-     * @returns `true` if the stopwatch was running, otherwise `false`
+     * @returns `true` if the stopwatch was running, otherwise `false`.
      */
     public stop(): boolean
     {

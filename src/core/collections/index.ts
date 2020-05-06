@@ -1,5 +1,5 @@
 export * from './enumerable';
-export * from './grouping.interface';
+export * from './grouping';
 export * from './iteration';
 export * from './key-selector';
 export * from './list';

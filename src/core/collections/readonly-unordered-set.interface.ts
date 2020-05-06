@@ -1,5 +1,5 @@
 import { DeepReadonly } from '../types/deep-readonly';
-import { Stringifier } from '../stringifier';
+import { Stringifier } from '../types/stringifier';
 
 export interface IReadonlyUnorderedSet<T>
     extends

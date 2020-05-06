@@ -4,8 +4,8 @@ import { isUndefined } from './is-undefined';
 
 /**
  * Checks whether or not an object is not `null` and not `undefined`.
- * @param obj object to check
- * @returns if `obj` is `null` or `undefined`, then `false`, otherwise `true`
+ * @param obj Object to check.
+ * @returns If `obj` is `null` or `undefined`, then `false`, otherwise `true`.
  */
 export function isDefined<T>(obj: Optional<T>): obj is T
 {

@@ -26,7 +26,7 @@ export class Lazy<T = any>
 
     /**
      * Creates a new lazy object.
-     * @param provider a function that will be used to initialize the object
+     * @param provider A function that will be used to initialize the object.
      */
     public constructor(provider: () => T)
     {
