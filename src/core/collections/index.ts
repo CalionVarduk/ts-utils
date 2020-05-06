@@ -1,4 +1,4 @@
-export * from './enumerator';
+export * from './enumerable';
 export * from './grouping.interface';
 export * from './iteration';
 export * from './key-selector';

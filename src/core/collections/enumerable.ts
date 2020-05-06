@@ -6,11 +6,16 @@ import { UnorderedMap } from './unordered-map';
 import { Ensured } from '../types/ensured';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Pair } from './pair';
-import { EnsuredStringifier } from '../stringifier';
+import { Stringifier } from '../stringifier';
 import { KeySelector } from './key-selector';
 import { Nullable } from '../types/nullable';
+import { NotNull } from '../types/not-null';
+import { NotUndefined } from '../types/not-undefined';
+import { Comparer } from '../comparer';
+import { DeepReadonly } from '../types';
+import { EqualityComparer } from '../equality-comparer';
 
-export class Enumerator<T>
+export class Enumerable<T>
     implements
     Iterable<T>
 {
@@ -21,125 +26,139 @@ export class Enumerator<T>
         this._iterable = iterable;
     }
 
-    public definedOnly():
-        Enumerator<Ensured<T>>
+    public filterDefinedOnly():
+        Enumerable<Ensured<T>>
     {
-        return new Enumerator<Ensured<T>>(
-            reinterpretCast<Iterable<Ensured<T>>>(Iteration.DefinedOnly(this._iterable)));
+        return new Enumerable<Ensured<T>>(
+            reinterpretCast<Iterable<Ensured<T>>>(Iteration.FilterDefinedOnly(this._iterable)));
+    }
+
+    public filterNotNull():
+        Enumerable<NotNull<T>>
+    {
+        return new Enumerable<NotNull<T>>(
+            reinterpretCast<Iterable<NotNull<T>>>(Iteration.FilterNotNull(this._iterable)));
+    }
+
+    public filterNotUndefined():
+        Enumerable<NotUndefined<T>>
+    {
+        return new Enumerable<NotUndefined<T>>(
+            reinterpretCast<Iterable<NotUndefined<T>>>(Iteration.FilterNotUndefined(this._iterable)));
     }
 
     public filter(
         predicate: (obj: T, index: number) => boolean):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Filter(this._iterable, predicate));
     }
 
     public map<U>(
         mapper: (obj: T, index: number) => U):
-        Enumerator<U>
+        Enumerable<U>
     {
-        return new Enumerator<U>(
+        return new Enumerable<U>(
             Iteration.Map(this._iterable, mapper));
     }
 
     public mapMany<U>(
         mapper: (obj: T, index: number) => Iterable<U>):
-        Enumerator<U>
+        Enumerable<U>
     {
-        return new Enumerator<U>(
+        return new Enumerable<U>(
             Iteration.MapMany(this._iterable, mapper));
     }
 
     public concat(
         other: Iterable<T>):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Concat(this._iterable, other));
     }
 
     public repeat(
         count: number):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Repeat(this._iterable, count));
     }
 
     public take(
         count: number):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Take(this._iterable, count));
     }
 
     public takeWhile(
         predicate: (obj: T, index: number) => boolean):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.TakeWhile(this._iterable, predicate));
     }
 
     public skip(
         count: number):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Skip(this._iterable, count));
     }
 
     public skipWhile(
         predicate: (obj: T, index: number) => boolean):
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.SkipWhile(this._iterable, predicate));
     }
 
     public zip<U>(
         other: Iterable<U>):
-        Enumerator<Pair<T, U>>
+        Enumerable<Pair<T, U>>
     {
-        return new Enumerator<Pair<T, U>>(
+        return new Enumerable<Pair<T, U>>(
             Iteration.Zip(this._iterable, other));
     }
 
     public unique(
-        objectStringifier?: EnsuredStringifier<T>):
-        Enumerator<T>
+        objectStringifier?: Stringifier<T>):
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Unique(this._iterable, objectStringifier));
     }
 
     public intersect(
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
-        Enumerator<T>
+        objectStringifier?: Stringifier<T>):
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Intersect(this._iterable, other, objectStringifier));
     }
 
     public union(
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
-        Enumerator<T>
+        objectStringifier?: Stringifier<T>):
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Union(this._iterable, other, objectStringifier));
     }
 
     public except(
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
-        Enumerator<T>
+        objectStringifier?: Stringifier<T>):
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Except(this._iterable, other, objectStringifier));
     }
 
@@ -148,10 +167,10 @@ export class Enumerator<T>
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Ensured<T>, otherObj: Nullable<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
-        Enumerator<TResult>
+        keyStringifier?: Stringifier<TKey>):
+        Enumerable<TResult>
     {
-        return new Enumerator<TResult>(
+        return new Enumerable<TResult>(
             Iteration.LeftJoin(this._iterable, keySelector, other, otherKeySelector, resultMapper, keyStringifier));
     }
 
@@ -160,10 +179,10 @@ export class Enumerator<T>
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Ensured<T>, otherObj: Ensured<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
-        Enumerator<TResult>
+        keyStringifier?: Stringifier<TKey>):
+        Enumerable<TResult>
     {
-        return new Enumerator<TResult>(
+        return new Enumerable<TResult>(
             Iteration.InnerJoin(this._iterable, keySelector, other, otherKeySelector, resultMapper, keyStringifier));
     }
 
@@ -172,38 +191,45 @@ export class Enumerator<T>
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Nullable<T>, otherObj: Nullable<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
-        Enumerator<TResult>
+        keyStringifier?: Stringifier<TKey>):
+        Enumerable<TResult>
     {
-        return new Enumerator<TResult>(
+        return new Enumerable<TResult>(
             Iteration.FullJoin(this._iterable, keySelector, other, otherKeySelector, resultMapper, keyStringifier));
     }
 
     public reverse():
-        Enumerator<T>
+        Enumerable<T>
     {
-        return new Enumerator<T>(
+        return new Enumerable<T>(
             Iteration.Reverse(this._iterable));
     }
 
     public reinterpretCast<U>():
-        Enumerator<U>
+        Enumerable<U>
     {
-        return new Enumerator<U>(
+        return new Enumerable<U>(
             Iteration.ReinterpretCast<U>(this._iterable));
     }
 
-    public sort(
-        comparer: (left: T, right: T) => number):
-        Enumerator<T>
+    public asDeepReadonly():
+        Enumerable<DeepReadonly<T>>
     {
-        return new Enumerator<T>(
+        return new Enumerable<DeepReadonly<T>>(
+            Iteration.AsDeepReadonly(this._iterable));
+    }
+
+    public sort(
+        comparer: Comparer<T>):
+        Enumerable<T>
+    {
+        return new Enumerable<T>(
             Iteration.Sort(this._iterable, comparer));
     }
 
     public groupBy<TKey>(
         keySelector: KeySelector<TKey, T>,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        keyStringifier?: Stringifier<TKey>):
         IReadonlyUnorderedMap<TKey, IGrouping<TKey, T>>
     {
         return Iteration.GroupBy(this._iterable, keySelector, keyStringifier);
@@ -211,7 +237,7 @@ export class Enumerator<T>
 
     public sequenceEqual(
         other: Iterable<T>,
-        comparer?: (left: T, right: T) => boolean):
+        comparer?: EqualityComparer<T>):
         boolean
     {
         return Iteration.SequenceEqual(this._iterable, other, comparer);
@@ -219,7 +245,7 @@ export class Enumerator<T>
 
     public setEqual(
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         boolean
     {
         return Iteration.SetEqual(this._iterable, other, objectStringifier);
@@ -246,8 +272,8 @@ export class Enumerator<T>
     }
 
     public has(
-        object: T,
-        comparer?: (left: T, right: T) => boolean):
+        object: DeepReadonly<T>,
+        comparer?: EqualityComparer<T>):
         boolean
     {
         return Iteration.Has(this._iterable, object, comparer);
@@ -316,7 +342,7 @@ export class Enumerator<T>
     }
 
     public toSet(
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         UnorderedSet<T>
     {
         return Iteration.ToSet(this._iterable, objectStringifier);
@@ -324,8 +350,8 @@ export class Enumerator<T>
 
     public toMap<TKey, TValue>(
         keySelector: KeySelector<TKey, T>,
-        valueSelector: (obj: Ensured<T>) => TValue,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        valueSelector: (obj: T) => TValue,
+        keyStringifier?: Stringifier<TKey>):
         UnorderedMap<TKey, TValue>
     {
         return Iteration.ToMap(this._iterable, keySelector, valueSelector, keyStringifier);
@@ -344,6 +370,19 @@ export class Enumerator<T>
         TResult
     {
         return Iteration.Reduce(this._iterable, callback, seed);
+    }
+
+    public hasDuplicates(
+        objectStringifier?: Stringifier<T>):
+        boolean
+    {
+        return Iteration.HasDuplicates(this._iterable, objectStringifier);
+    }
+
+    public getIterable():
+        Iterable<T>
+    {
+        return this._iterable;
     }
 
     public* [Symbol.iterator](): IterableIterator<T>

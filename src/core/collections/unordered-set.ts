@@ -2,15 +2,7 @@ import { IReadonlyUnorderedSet } from './readonly-unordered-set.interface';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
-import { EnsuredStringifier } from '../stringifier';
-
-function stringifyObject<T>(
-    obj: DeepReadonly<T>,
-    stringifier: EnsuredStringifier<T>): string
-{
-    return stringifier(
-            Assert.IsDefined(obj, 'obj')!);
-}
+import { Stringifier } from '../stringifier';
 
 export class UnorderedSet<T>
     implements
@@ -26,12 +18,12 @@ export class UnorderedSet<T>
         return this.length === 0;
     }
 
-    public readonly stringifier: EnsuredStringifier<T>;
+    public readonly stringifier: Stringifier<T>;
 
     private readonly _map: Map<string, T>;
 
     public constructor(
-        stringifier: EnsuredStringifier<T> = o => reinterpretCast<object>(o).toString())
+        stringifier: Stringifier<T> = o => reinterpretCast<object>(o).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
         this._map = new Map<string, T>();
@@ -39,13 +31,13 @@ export class UnorderedSet<T>
 
     public has(obj: DeepReadonly<T>): boolean
     {
-        const stringifiedObject = stringifyObject(obj, this.stringifier);
+        const stringifiedObject = this.stringifier(obj);
         return this._map.has(stringifiedObject);
     }
 
     public add(obj: T): void
     {
-        const stringifiedObject = stringifyObject(toDeepReadonly(obj), this.stringifier);
+        const stringifiedObject = this.stringifier(toDeepReadonly(obj));
 
         if (this._map.has(stringifiedObject))
             throw new Error(`unordered set already contains object ${JSON.stringify(obj)} [${stringifiedObject}].`);
@@ -55,7 +47,7 @@ export class UnorderedSet<T>
 
     public tryAdd(obj: T): boolean
     {
-        const stringifiedObject = stringifyObject(toDeepReadonly(obj), this.stringifier);
+        const stringifiedObject = this.stringifier(toDeepReadonly(obj));
 
         if (this._map.has(stringifiedObject))
             return false;
@@ -66,7 +58,7 @@ export class UnorderedSet<T>
 
     public delete(obj: DeepReadonly<T>): void
     {
-        const stringifiedObject = stringifyObject(obj, this.stringifier);
+        const stringifiedObject = this.stringifier(obj);
 
         if (!this._map.delete(stringifiedObject))
             throw new Error(`unordered set doesn't contain object ${JSON.stringify(obj)} [${stringifiedObject}].`);
@@ -74,7 +66,7 @@ export class UnorderedSet<T>
 
     public tryDelete(obj: DeepReadonly<T>): boolean
     {
-        const stringifiedObject = stringifyObject(obj, this.stringifier);
+        const stringifiedObject = this.stringifier(obj);
         return this._map.delete(stringifiedObject);
     }
 

@@ -1,5 +1,5 @@
 import { DeepReadonly } from '../types/deep-readonly';
-import { EnsuredStringifier } from '../stringifier';
+import { Stringifier } from '../stringifier';
 
 export interface IReadonlyUnorderedSet<T>
     extends
@@ -7,7 +7,7 @@ export interface IReadonlyUnorderedSet<T>
 {
     readonly length: number;
     readonly isEmpty: boolean;
-    readonly stringifier: EnsuredStringifier<T>;
+    readonly stringifier: Stringifier<T>;
 
     has(obj: DeepReadonly<T>): boolean;
     entries(): Iterable<T>;

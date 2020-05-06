@@ -14,6 +14,8 @@ export interface IReadonlyTable<TKey, TEntity>
 
     get(key: DeepReadonly<TKey>): TEntity;
     tryGet(key: DeepReadonly<TKey>): Nullable<TEntity>;
+    getRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>;
+    tryGetRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>;
     has(entity: DeepReadonly<TEntity>): boolean;
     hasKey(key: DeepReadonly<TKey>): boolean;
     entities(): Iterable<TEntity>;

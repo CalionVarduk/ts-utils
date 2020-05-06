@@ -4,28 +4,17 @@ import { IReadonlyUnorderedMap } from './readonly-unordered-map.interface';
 import { IGrouping } from './grouping.interface';
 import { Optional } from '../types/optional';
 import { isDefined } from '../functions/is-defined';
-import { EnsuredStringifier } from '../stringifier';
+import { Stringifier } from '../stringifier';
 import { Ensured } from '../types/ensured';
 import { toDeepReadonly, DeepReadonly } from '../types/deep-readonly';
 import { KeySelector } from './key-selector';
 import { reinterpretCast } from '../functions/reinterpret-cast';
-import { Assert, isNull } from '../functions';
+import { isNull, isUndefined, isInstanceOfType } from '../functions';
 import { Pair, makePair } from './pair';
 import { Nullable } from '../types/nullable';
-
-function safeDeepReadonlyCast<T>(
-    obj: T):
-    Ensured<DeepReadonly<T>>
-{
-    return reinterpretCast<Ensured<DeepReadonly<T>>>(
-        Assert.IsDefined(obj, 'obj'));
-}
-
-function removeEnsured<T>(
-    obj: Ensured<T>): T
-{
-    return obj;
-}
+import { Undefinable } from '../types';
+import { EqualityComparer } from '../equality-comparer';
+import { Comparer } from '../comparer';
 
 export namespace Iteration
 {
@@ -38,12 +27,30 @@ export namespace Iteration
         yield object;
     }
 
-    export function* DefinedOnly<T>(
+    export function* FilterDefinedOnly<T>(
         source: Iterable<Optional<T>>):
         Iterable<T>
     {
         for (const obj of source)
             if (isDefined(obj))
+                yield obj;
+    }
+
+    export function* FilterNotNull<T>(
+        source: Iterable<Nullable<T>>):
+        Iterable<T>
+    {
+        for (const obj of source)
+            if (!isNull(obj))
+                yield obj;
+    }
+
+    export function* FilterNotUndefined<T>(
+        source: Iterable<Undefinable<T>>):
+        Iterable<T>
+    {
+        for (const obj of source)
+            if (!isUndefined(obj))
                 yield obj;
     }
 
@@ -199,7 +206,7 @@ export namespace Iteration
 
     export function* Unique<T>(
         source: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
         const set = new UnorderedSet<T>(objectStringifier);
@@ -212,7 +219,7 @@ export namespace Iteration
     export function* Intersect<T>(
         source: Iterable<T>,
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
         const otherSet = Iteration.ToSet(other, objectStringifier);
@@ -225,7 +232,7 @@ export namespace Iteration
     export function* Union<T>(
         source: Iterable<T>,
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
         const set = new UnorderedSet<T>(objectStringifier);
@@ -242,7 +249,7 @@ export namespace Iteration
     export function* Except<T>(
         source: Iterable<T>,
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
         const otherSet = Iteration.ToSet(other, objectStringifier);
@@ -258,7 +265,7 @@ export namespace Iteration
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Ensured<T>, otherObj: Nullable<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
         const otherMap = Iteration.ToMap(other, otherKeySelector, o => o, keyStringifier);
@@ -266,8 +273,8 @@ export namespace Iteration
 
         for (const sourceObj of source)
         {
-            const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(removeEnsured(key));
+            const key = sourceKeySelector(toDeepReadonly(sourceObj));
+            const otherObj = otherMap.tryGet(key);
             yield resultMapper(sourceObj!, otherObj, index++);
         }
     }
@@ -278,7 +285,7 @@ export namespace Iteration
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Ensured<T>, otherObj: Ensured<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
         const otherMap = Iteration.ToMap(other, otherKeySelector, o => o, keyStringifier);
@@ -286,13 +293,13 @@ export namespace Iteration
 
         for (const sourceObj of source)
         {
-            const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(removeEnsured(key));
+            const key = sourceKeySelector(toDeepReadonly(sourceObj));
+            const otherObj = otherMap.tryGet(key);
 
             if (isNull(otherObj))
                 continue;
 
-            yield resultMapper(sourceObj!, otherObj, index++);
+            yield resultMapper(sourceObj!, otherObj!, index++);
         }
     }
 
@@ -302,7 +309,7 @@ export namespace Iteration
         other: Iterable<U>,
         otherKeySelector: KeySelector<TKey, U>,
         resultMapper: (sourceObj: Nullable<T>, otherObj: Nullable<U>, index: number) => TResult,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
         const otherMap = Iteration.ToMap(other, otherKeySelector, o => o, keyStringifier);
@@ -310,19 +317,19 @@ export namespace Iteration
 
         for (const sourceObj of source)
         {
-            const key = sourceKeySelector(safeDeepReadonlyCast(sourceObj));
-            const otherObj = otherMap.tryGet(removeEnsured(key));
+            const key = sourceKeySelector(toDeepReadonly(sourceObj));
+            const otherObj = otherMap.tryGet(key);
 
             if (!isNull(otherObj))
-                otherMap.tryDelete(removeEnsured(key));
+                otherMap.tryDelete(key);
 
             yield resultMapper(sourceObj, otherObj, index++);
         }
         for (const otherObj of other)
         {
-            const key = otherKeySelector(safeDeepReadonlyCast(otherObj));
+            const key = otherKeySelector(toDeepReadonly(otherObj));
 
-            if (otherMap.has(removeEnsured(key)))
+            if (otherMap.has(key))
                 yield resultMapper(null, otherObj, index++);
         }
     }
@@ -331,7 +338,7 @@ export namespace Iteration
         source: Iterable<T>):
         Iterable<T>
     {
-        const result = Iteration.ToArray(source);
+        const result = isInstanceOfType<T[]>(Array, source) ? source : Iteration.ToArray(source);
         for (let i = result.length - 1; i >= 0; --i)
             yield result[i];
     }
@@ -350,31 +357,38 @@ export namespace Iteration
         return reinterpretCast<Iterable<TResult>>(source);
     }
 
+    export function AsDeepReadonly<T>(
+        source: Iterable<T>):
+        Iterable<DeepReadonly<T>>
+    {
+        return reinterpretCast<Iterable<DeepReadonly<T>>>(source);
+    }
+
     export function Sort<T>(
         source: Iterable<T>,
-        comparer: (left: T, right: T) => number):
+        comparer: Comparer<T>):
         Iterable<T>
     {
-        const result = Iteration.ToArray(source);
-        result.sort(comparer);
+        const result = isInstanceOfType<T[]>(Array, source) ? source : Iteration.ToArray(source);
+        result.sort(reinterpretCast<(l: T, r: T) => number>(comparer));
         return result;
     }
 
     export function GroupBy<T, TKey>(
         source: Iterable<T>,
         keySelector: KeySelector<TKey, T>,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        keyStringifier?: Stringifier<TKey>):
         IReadonlyUnorderedMap<TKey, IGrouping<TKey, T>>
     {
         const result = new UnorderedMap<TKey, IGrouping<TKey, T>>(keyStringifier);
 
         for (const obj of source)
         {
-            const key = keySelector(safeDeepReadonlyCast(obj));
-            const group = result.getOrAdd(removeEnsured(key), () =>
+            const key = keySelector(toDeepReadonly(obj));
+            const group = result.getOrAdd(key, () =>
                 {
                     const defaultGroup: IGrouping<TKey, T> = {
-                        key: removeEnsured(key),
+                        key: key,
                         items: []
                     };
                     return defaultGroup;
@@ -387,7 +401,7 @@ export namespace Iteration
     export function SequenceEqual<T>(
         source: Iterable<T>,
         other: Iterable<T>,
-        comparer?: (left: T, right: T) => boolean):
+        comparer?: EqualityComparer<T>):
         boolean
     {
         const sourceIterator = source[Symbol.iterator]();
@@ -399,7 +413,7 @@ export namespace Iteration
         {
             while (!sourceCurrent.done && !otherCurrent.done)
             {
-                if (!comparer(sourceCurrent.value, otherCurrent.value))
+                if (!comparer(toDeepReadonly(sourceCurrent.value), toDeepReadonly(otherCurrent.value)))
                     return false;
 
                 sourceCurrent = sourceIterator.next();
@@ -423,7 +437,7 @@ export namespace Iteration
     export function SetEqual<T>(
         source: Iterable<T>,
         other: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         boolean
     {
         const sourceSet = Iteration.ToSet(source, objectStringifier);
@@ -478,14 +492,14 @@ export namespace Iteration
 
     export function Has<T>(
         source: Iterable<T>,
-        object: T,
-        comparer?: (left: T, right: T) => boolean):
+        object: DeepReadonly<T>,
+        comparer?: EqualityComparer<T>):
         boolean
     {
         if (isDefined(comparer))
         {
             for (const obj of source)
-                if (comparer(obj, object))
+                if (comparer(toDeepReadonly(obj), object))
                     return true;
         }
         else
@@ -633,7 +647,7 @@ export namespace Iteration
 
     export function ToSet<T>(
         source: Iterable<T>,
-        objectStringifier?: EnsuredStringifier<T>):
+        objectStringifier?: Stringifier<T>):
         UnorderedSet<T>
     {
         const result = new UnorderedSet<T>(objectStringifier);
@@ -647,17 +661,17 @@ export namespace Iteration
     export function ToMap<T, TKey, TValue>(
         source: Iterable<T>,
         keySelector: KeySelector<TKey, T>,
-        valueSelector: (obj: Ensured<T>) => TValue,
-        keyStringifier?: EnsuredStringifier<TKey>):
+        valueSelector: (obj: T) => TValue,
+        keyStringifier?: Stringifier<TKey>):
         UnorderedMap<TKey, TValue>
     {
         const result = new UnorderedMap<TKey, TValue>(keyStringifier);
 
         for (const obj of source)
         {
-            const key = keySelector(safeDeepReadonlyCast(obj));
-            const value = valueSelector(obj!);
-            result.tryAdd(removeEnsured(key), value);
+            const key = keySelector(toDeepReadonly(obj));
+            const value = valueSelector(obj);
+            result.tryAdd(key, value);
         }
         return result;
     }
@@ -686,5 +700,19 @@ export namespace Iteration
             result = callback(result, obj, index++);
 
         return result;
+    }
+
+    export function HasDuplicates<T>(
+        source: Iterable<T>,
+        objectStringifier?: Stringifier<T>):
+        boolean
+    {
+        const set = new UnorderedSet<T>(objectStringifier);
+
+        for (const obj of source)
+            if (!set.tryAdd(obj))
+                return true;
+
+        return false;
     }
 }

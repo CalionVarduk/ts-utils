@@ -4,17 +4,8 @@ import { reinterpretCast } from '../functions/reinterpret-cast';
 import { Assert } from '../functions/assert';
 import { DeepReadonly } from '../types/deep-readonly';
 import { isUndefined } from '../functions/is-undefined';
-import { EnsuredStringifier } from '../stringifier';
+import { Stringifier } from '../stringifier';
 import { Nullable } from '../types/nullable';
-
-function stringifyKey<TKey>(
-    key: DeepReadonly<TKey>,
-    stringifier: EnsuredStringifier<TKey>):
-    string
-{
-    return stringifier(
-        Assert.IsDefined(key, 'key')!);
-}
 
 export class UnorderedMap<TKey, TValue>
     implements
@@ -30,12 +21,12 @@ export class UnorderedMap<TKey, TValue>
         return this.length === 0;
     }
 
-    public readonly stringifier: EnsuredStringifier<TKey>;
+    public readonly stringifier: Stringifier<TKey>;
 
     private readonly _map: Map<string, MapEntry<TKey, TValue>>;
 
     public constructor(
-        stringifier: EnsuredStringifier<TKey> = k => reinterpretCast<object>(k).toString())
+        stringifier: Stringifier<TKey> = k => reinterpretCast<object>(k).toString())
     {
         this.stringifier = Assert.IsDefined(stringifier, 'stringifier');
         this._map = new Map<string, MapEntry<TKey, TValue>>();
@@ -43,7 +34,7 @@ export class UnorderedMap<TKey, TValue>
 
     public get(key: DeepReadonly<TKey>): TValue
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         const entry = this._map.get(stringifiedKey);
 
         if (isUndefined(entry))
@@ -54,20 +45,20 @@ export class UnorderedMap<TKey, TValue>
 
     public tryGet(key: DeepReadonly<TKey>): Nullable<TValue>
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         const entry = this._map.get(stringifiedKey);
         return isUndefined(entry) ? null : entry.value;
     }
 
     public has(key: DeepReadonly<TKey>): boolean
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         return this._map.has(stringifiedKey);
     }
 
     public getOrAdd(key: DeepReadonly<TKey>, defaultValueProvider: () => TValue): TValue
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         let entry = this._map.get(stringifiedKey);
 
         if (isUndefined(entry))
@@ -80,7 +71,7 @@ export class UnorderedMap<TKey, TValue>
 
     public add(key: DeepReadonly<TKey>, value: TValue): void
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
 
         if (this._map.has(stringifiedKey))
             throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] already exists.`);
@@ -90,7 +81,7 @@ export class UnorderedMap<TKey, TValue>
 
     public tryAdd(key: DeepReadonly<TKey>, value: TValue): boolean
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
 
         if (this._map.has(stringifiedKey))
             return false;
@@ -101,13 +92,13 @@ export class UnorderedMap<TKey, TValue>
 
     public set(key: DeepReadonly<TKey>, value: TValue): void
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         this._map.set(stringifiedKey, makeMapEntry(key, value));
     }
 
     public delete(key: DeepReadonly<TKey>): void
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
 
         if (!this._map.delete(stringifiedKey))
             throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] doesn't exist.`);
@@ -115,7 +106,7 @@ export class UnorderedMap<TKey, TValue>
 
     public tryDelete(key: DeepReadonly<TKey>): boolean
     {
-        const stringifiedKey = stringifyKey(key, this.stringifier);
+        const stringifiedKey = this.stringifier(key);
         return this._map.delete(stringifiedKey);
     }
 

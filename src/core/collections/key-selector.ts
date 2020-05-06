@@ -1,4 +1,3 @@
 import { DeepReadonly } from '../types/deep-readonly';
-import { Ensured } from '../types/ensured';
 
-export type KeySelector<TKey, TValue> = (value: Ensured<DeepReadonly<TValue>>) => Ensured<DeepReadonly<TKey>>;
+export type KeySelector<TKey, TValue> = (value: DeepReadonly<TValue>) => DeepReadonly<TKey>;

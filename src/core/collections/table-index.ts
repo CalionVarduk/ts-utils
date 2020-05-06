@@ -2,18 +2,10 @@ import { UnorderedMap } from './unordered-map';
 import { MapEntry } from './map-entry';
 import { IReadonlyTableIndex } from './readonly-table-index.interface';
 import { KeySelector } from './key-selector';
-import { EnsuredStringifier } from '../stringifier';
+import { Stringifier } from '../stringifier';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
-import { Nullable, Ensured } from '../types';
+import { Nullable } from '../types';
 import { isNull } from '../functions/is-null';
-import { Assert } from '../functions/assert';
-
-function removeEnsured<T>(
-    obj: Ensured<T>):
-    T
-{
-    return obj;
-}
 
 export class TableIndex<TKey, TEntity>
     implements
@@ -24,7 +16,7 @@ export class TableIndex<TKey, TEntity>
         return this._map.length;
     }
 
-    public get keyStringifier(): EnsuredStringifier<TKey>
+    public get keyStringifier(): Stringifier<TKey>
     {
         return this._map.stringifier;
     }
@@ -37,7 +29,7 @@ export class TableIndex<TKey, TEntity>
     public constructor(
         name: string,
         keySelector: KeySelector<TKey, TEntity>,
-        keyStringifier?: EnsuredStringifier<TKey>)
+        keyStringifier?: Stringifier<TKey>)
     {
         this.name = name;
         this.keySelector = keySelector;
@@ -75,16 +67,15 @@ export class TableIndex<TKey, TEntity>
         }
     }
 
-    public getEntityKey(entity: DeepReadonly<TEntity>): Ensured<DeepReadonly<TKey>>
+    public getEntityKey(entity: DeepReadonly<TEntity>): DeepReadonly<TKey>
     {
-        return this.keySelector(
-            Assert.IsDefined(entity, 'entity')!);
+        return this.keySelector(entity);
     }
 
     public has(entity: DeepReadonly<TEntity>): boolean
     {
         const key = this.getEntityKey(entity);
-        return this._map.has(removeEnsured(key));
+        return this._map.has(key);
     }
 
     public hasKey(key: DeepReadonly<TKey>): boolean
@@ -96,15 +87,21 @@ export class TableIndex<TKey, TEntity>
     {
         const key = this.getEntityKey(toDeepReadonly(entity));
 
-        if (!this._map.tryAdd(removeEnsured(key), entity))
+        if (!this._map.tryAdd(key, entity))
             throw new Error(`index '${this.name}' already contains an entity with key ${JSON.stringify(key)}.`);
+    }
+
+    public tryAdd(entity: TEntity): boolean
+    {
+        const key = this.getEntityKey(toDeepReadonly(entity));
+        return this._map.tryAdd(key, entity);
     }
 
     public delete(entity: DeepReadonly<TEntity>): void
     {
         const key = this.getEntityKey(entity);
 
-        if (!this._map.tryDelete(removeEnsured(key)))
+        if (!this._map.tryDelete(key))
             throw new Error(`index '${this.name}' doesn't contain an entity with key ${JSON.stringify(key)}.`);
     }
 
