@@ -21,10 +21,4 @@ export interface IReadonlyUnorderedSet<T>
      * @returns `true`, if object exists, otherwise `false`.
      */
     has(obj: DeepReadonly<T>): boolean;
-
-    /**
-     * Creates an iterable containing all set elements.
-     * @returns An iterable containing all set elements.
-     */
-    entries(): Iterable<T>;
 }

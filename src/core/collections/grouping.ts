@@ -25,7 +25,8 @@ export function makeGrouping<TKey, TValue>(
     return {
         key: key,
         items: items,
-        [Symbol.iterator]() {
+        [Symbol.iterator]()
+        {
             return items[Symbol.iterator]();
         }
     };

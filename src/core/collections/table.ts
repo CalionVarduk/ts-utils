@@ -10,7 +10,7 @@ import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { Nullable } from '../types/nullable';
 import { isNull } from '../functions/is-null';
 import { Iteration } from './iteration';
-import { deepReadonlyCast } from '../functions';
+import { deepReadonlyCast, createIterable } from '../functions';
 
 function decoratePrimaryKeyName(tableName: string): string
 {
@@ -379,10 +379,15 @@ export class Table<TKey, TEntity>
         this._indexes.clear();
     }
 
-    public* indexNames(): Iterable<string>
+    public indexNames(): Iterable<string>
     {
-        for (const index of this._indexes.values())
-            yield extractIndexName(this.name, index);
+        const name = this.name;
+        const indexes = this._indexes;
+        return createIterable(function*()
+            {
+                for (const index of indexes.values())
+                    yield extractIndexName(name, index);
+            });
     }
 
     public [Symbol.iterator](): IterableIterator<MapEntry<TKey, TEntity>>

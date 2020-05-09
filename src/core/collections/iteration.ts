@@ -19,24 +19,20 @@ import { readonlyCast } from '../functions/readonly-cast';
 import { isUndefined } from '../functions/is-undefined';
 import { SafeCast, isOfType } from '../functions/dynamic-cast';
 import { isInstanceOfType } from '../functions/instance-of-cast';
+import { createIterable } from '../functions/create-iterable';
 
-const EMPTY_RETURN_RESULT: any = readonlyCast(Object.freeze({
+const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
 }));
 
-const EMPTY_RESULT: Iterator<any> = readonlyCast(Object.freeze({
+const EMPTY_ITERATOR: Iterator<any> = readonlyCast(Object.freeze({
     next()
     {
-        return EMPTY_RETURN_RESULT;
+        return EMPTY_ITERATOR_RESULT;
     }
 }));
 
-const EMPTY: Iterable<any> = readonlyCast(Object.freeze({
-    [Symbol.iterator]()
-    {
-        return EMPTY_RESULT;
-    }
-}));
+const EMPTY: Iterable<any> = readonlyCast(Object.freeze(createIterable(() => EMPTY_ITERATOR)));
 
 /** Contains basic functions that allow to manipulate Iterable objects. */
 export namespace Iteration
@@ -63,25 +59,21 @@ export namespace Iteration
         Iterable<number>
     {
         if (isDefined(to))
-            return {
-                *[Symbol.iterator]()
+            return createIterable(function*()
                 {
                     let value = from;
 
                     while (value <= to)
                         yield value++;
-                }
-            };
+                });
 
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let value = from;
 
                 while (true)
                     yield value++;
-            }
-        };
+            });
     }
 
     /**
@@ -93,12 +85,10 @@ export namespace Iteration
         object: T):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 yield object;
-            }
-        };
+            });
     }
 
     /**
@@ -110,14 +100,12 @@ export namespace Iteration
         source: Iterable<Optional<T>>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const obj of source)
                     if (isDefined(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -129,14 +117,12 @@ export namespace Iteration
         source: Iterable<Nullable<T>>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const obj of source)
                     if (!isNull(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -148,14 +134,12 @@ export namespace Iteration
         source: Iterable<Undefinable<T>>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const obj of source)
                     if (!isUndefined(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -169,16 +153,14 @@ export namespace Iteration
         predicate: (obj: T, index: number) => boolean):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let index = 0;
 
                 for (const obj of source)
                     if (predicate(obj, index++))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -192,15 +174,13 @@ export namespace Iteration
         mapper: (obj: T, index: number) => U):
         Iterable<U>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let index = 0;
 
                 for (const obj of source)
                     yield mapper(obj, index++);
-            }
-        };
+            });
     }
 
     /**
@@ -214,15 +194,13 @@ export namespace Iteration
         mapper: (obj: T, index: number) => Iterable<U>):
         Iterable<U>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let index = 0;
 
                 for (const obj of source)
                     yield* mapper(obj, index++);
-            }
-        };
+            });
     }
 
     /**
@@ -236,13 +214,11 @@ export namespace Iteration
         other: Iterable<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 yield* source;
                 yield* other;
-            }
-        };
+            });
     }
 
     /**
@@ -259,13 +235,11 @@ export namespace Iteration
         if (Iteration.IsEmpty(source))
             return Iteration.Empty<T>();
 
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (let i = 0; i < count; ++i)
                     yield* source;
-            }
-        };
+            });
     }
 
     /**
@@ -280,13 +254,11 @@ export namespace Iteration
         if (Iteration.IsEmpty(source))
             return Iteration.Empty<T>();
 
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 while (true)
                     yield* source;
-            }
-        };
+            });
     }
 
     /**
@@ -300,8 +272,7 @@ export namespace Iteration
         count: number):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let index = 0;
 
@@ -313,8 +284,7 @@ export namespace Iteration
                     yield obj;
                     ++index;
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -328,8 +298,7 @@ export namespace Iteration
         predicate: (obj: T, index: number) => boolean):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 let index = 0;
 
@@ -340,8 +309,7 @@ export namespace Iteration
 
                     yield obj;
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -355,8 +323,7 @@ export namespace Iteration
         count: number):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const iterator = source[Symbol.iterator]();
                 let result = iterator.next();
@@ -375,8 +342,7 @@ export namespace Iteration
                     yield result.value;
                     result = iterator.next();
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -390,8 +356,7 @@ export namespace Iteration
         predicate: (obj: T, index: number) => boolean):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const iterator = source[Symbol.iterator]();
                 let result = iterator.next();
@@ -409,8 +374,7 @@ export namespace Iteration
                     yield result.value;
                     result = iterator.next();
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -424,8 +388,7 @@ export namespace Iteration
         other: Iterable<U>):
         Iterable<Pair<T, U>>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const sourceIterator = source[Symbol.iterator]();
                 const otherIterator = other[Symbol.iterator]();
@@ -438,8 +401,7 @@ export namespace Iteration
                     sourceCurrent = sourceIterator.next();
                     otherCurrent = otherIterator.next();
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -453,16 +415,14 @@ export namespace Iteration
         objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const set = new UnorderedSet<T>(objectStringifier);
 
                 for (const obj of source)
                     if (set.tryAdd(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -478,16 +438,14 @@ export namespace Iteration
         objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const otherSet = Iteration.ToSet(other, objectStringifier);
 
                 for (const obj of source)
                     if (otherSet.tryDelete(toDeepReadonly(obj)))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -503,8 +461,7 @@ export namespace Iteration
         objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const set = new UnorderedSet<T>(objectStringifier);
 
@@ -515,8 +472,7 @@ export namespace Iteration
                 for (const obj of other)
                     if (set.tryAdd(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -532,16 +488,14 @@ export namespace Iteration
         objectStringifier?: Stringifier<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const otherSet = Iteration.ToSet(other, objectStringifier);
 
                 for (const obj of source)
                     if (otherSet.tryAdd(obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -563,8 +517,7 @@ export namespace Iteration
         keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const innerMap = Iteration.GroupBy(inner, innerKeySelector, o => o, keyStringifier);
                 let index = 0;
@@ -582,8 +535,7 @@ export namespace Iteration
                             yield resultMapper(sourceObj, innerObj, index++);
                     }
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -605,8 +557,7 @@ export namespace Iteration
         keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const innerMap = Iteration.GroupBy(inner, innerKeySelector, o => o, keyStringifier);
                 let index = 0;
@@ -622,8 +573,7 @@ export namespace Iteration
                     for (const innerObj of innerGroup.items)
                         yield resultMapper(sourceObj, innerObj, index++);
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -645,8 +595,7 @@ export namespace Iteration
         keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const innerMap = Iteration.GroupBy(inner, innerKeySelector, o => o, keyStringifier);
 
@@ -675,8 +624,7 @@ export namespace Iteration
                     if (!reinterpretCast<any>(innerGroup)._joined)
                         yield resultMapper(null, innerObj, index++);
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -698,8 +646,7 @@ export namespace Iteration
         keyStringifier?: Stringifier<TKey>):
         Iterable<TResult>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const innerMap = Iteration.GroupBy(inner, innerKeySelector, o => o, keyStringifier);
                 let index = 0;
@@ -710,8 +657,7 @@ export namespace Iteration
                     const innerGroup = innerMap.tryGet(key);
                     yield resultMapper(sourceObj, isNull(innerGroup) ? Iteration.Empty<U>() : innerGroup, index++);
                 }
-            }
-        };
+            });
     }
 
     /**
@@ -725,14 +671,12 @@ export namespace Iteration
         type: T):
         Iterable<SafeCast<T>>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const obj of source)
                     if (isOfType(type, obj))
                         yield obj;
-            }
-        };
+            });
     }
 
     /**
@@ -744,14 +688,12 @@ export namespace Iteration
         source: Iterable<T>):
         Iterable<T>
     {
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 const result = isInstanceOfType<T[]>(Array, source) ? source : Iteration.ToArray(source);
                 for (let i = result.length - 1; i >= 0; --i)
                     yield result[i];
-            }
-        };
+            });
     }
 
     /**

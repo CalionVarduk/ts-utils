@@ -6,6 +6,7 @@ import { DeepReadonly } from '../types/deep-readonly';
 import { isUndefined } from '../functions/is-undefined';
 import { Stringifier } from '../types/stringifier';
 import { Nullable } from '../types/nullable';
+import { createIterable } from '../functions/create-iterable';
 
 /** Represents a map, or dictionary, data structure. */
 export class UnorderedMap<TKey, TValue>
@@ -156,21 +157,25 @@ export class UnorderedMap<TKey, TValue>
         this._map.clear();
     }
 
-    public* keys(): Iterable<DeepReadonly<TKey>>
+    public keys(): Iterable<DeepReadonly<TKey>>
     {
-        for (const entry of this._map.values())
-            yield entry.key;
+        const map = this._map;
+        return createIterable(function*()
+            {
+                for (const entry of map.values())
+                    yield entry.key;
+            });
+
     }
 
-    public* values(): Iterable<TValue>
+    public values(): Iterable<TValue>
     {
-        for (const entry of this._map.values())
-            yield entry.value;
-    }
-
-    public entries(): Iterable<MapEntry<TKey, TValue>>
-    {
-        return this._map.values();
+        const map = this._map;
+        return createIterable(function*()
+            {
+                for (const entry of map.values())
+                    yield entry.value;
+            });
     }
 
     public [Symbol.iterator](): IterableIterator<MapEntry<TKey, TValue>>

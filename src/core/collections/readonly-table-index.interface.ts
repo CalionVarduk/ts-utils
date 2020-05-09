@@ -23,5 +23,4 @@ export interface IReadonlyTableIndex<TKey, TEntity>
     hasKey(key: DeepReadonly<TKey>): boolean;
     keys(): Iterable<DeepReadonly<TKey>>;
     values(): Iterable<TEntity>;
-    entities(): Iterable<MapEntry<TKey, TEntity>>;
 }

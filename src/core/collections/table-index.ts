@@ -51,20 +51,32 @@ export class TableIndex<TKey, TEntity>
         return this._map.tryGet(key);
     }
 
-    public* getRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
+    public getRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
     {
-        for (const key of keys)
-            yield this.get(key);
+        const getter = this.get.bind(this);
+        return {
+            *[Symbol.iterator]()
+            {
+                for (const key of keys)
+                    yield getter(key);
+            }
+        };
     }
 
-    public* tryGetRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
+    public tryGetRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
     {
-        for (const key of keys)
-        {
-            const entity = this.tryGet(key);
-            if (!isNull(entity))
-                yield entity;
-        }
+        const getter = this.tryGet.bind(this);
+        return {
+            *[Symbol.iterator]()
+            {
+                for (const key of keys)
+                {
+                    const entity = getter(key);
+                    if (!isNull(entity))
+                        yield entity;
+                }
+            }
+        };
     }
 
     public getEntityKey(entity: DeepReadonly<TEntity>): DeepReadonly<TKey>
@@ -124,11 +136,6 @@ export class TableIndex<TKey, TEntity>
     public values(): Iterable<TEntity>
     {
         return this._map.values();
-    }
-
-    public entities(): Iterable<MapEntry<TKey, TEntity>>
-    {
-        return this._map.entries();
     }
 
     public [Symbol.iterator](): IterableIterator<MapEntry<TKey, TEntity>>

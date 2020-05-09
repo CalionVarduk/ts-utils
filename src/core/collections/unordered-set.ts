@@ -103,11 +103,6 @@ export class UnorderedSet<T>
         this._map.clear();
     }
 
-    public entries(): Iterable<T>
-    {
-        return this._map.values();
-    }
-
     public [Symbol.iterator](): IterableIterator<T>
     {
         return this._map.values();

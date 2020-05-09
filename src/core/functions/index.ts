@@ -1,4 +1,5 @@
 export * from './assert';
+export * from './create-iterable';
 export * from './deep-freeze';
 export * from './dynamic-cast';
 export * from './extend';

@@ -487,47 +487,6 @@ test('values should return iterable containing all values',
     }
 );
 
-test('entries should return iterable containing all key-value pairs',
-    () =>
-    {
-        const key1: Complex = {
-            foo: 0,
-            bar: 'bar'
-        };
-        const key2: Complex = {
-            foo: 1,
-            bar: 'baz'
-        };
-        const key3: Complex = {
-            foo: 1,
-            bar: 'bax'
-        };
-        const value1 = 'foo';
-        const value2 = 'bar';
-        const value3 = 'baz';
-        const map = new UnorderedMap<Complex, string>(c => `${c.foo}|${c.bar}`);
-        map.add(key1, value1);
-        map.add(key2, value2);
-        map.add(key3, value3);
-
-        const result = Array.from(map.entries());
-
-        expect(result.length).toBe(map.length);
-        const result1 = result.find(e => e.key === key1);
-        expect(result1).toBeDefined();
-        expect(result1!.key).toBe(key1);
-        expect(result1!.value).toBe(value1);
-        const result2 = result.find(e => e.key === key2);
-        expect(result2).toBeDefined();
-        expect(result2!.key).toBe(key2);
-        expect(result2!.value).toBe(value2);
-        const result3 = result.find(e => e.key === key3);
-        expect(result3).toBeDefined();
-        expect(result3!.key).toBe(key3);
-        expect(result3!.value).toBe(value3);
-    }
-);
-
 test('iterator symbol should return iterable containing all key-value pairs',
     () =>
     {

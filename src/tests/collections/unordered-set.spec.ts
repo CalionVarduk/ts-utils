@@ -234,23 +234,6 @@ test('clear should remove all objects',
     }
 );
 
-test('entries should return iterable containing all objects',
-    () =>
-    {
-        const set = new UnorderedSet<number>();
-        set.add(0);
-        set.add(1);
-        set.add(2);
-
-        const result = Array.from(set.entries());
-
-        expect(result.length).toBe(set.length);
-        expect(result).toContain(0);
-        expect(result).toContain(1);
-        expect(result).toContain(2);
-    }
-);
-
 test('iterator symbol should return iterable containing all objects',
     () =>
     {

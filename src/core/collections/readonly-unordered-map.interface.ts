@@ -50,10 +50,4 @@ export interface IReadonlyUnorderedMap<TKey, TValue>
      * @returns An iterable containing all map values.
      */
     values(): Iterable<TValue>;
-
-    /**
-     * Creates an iterable containing all map key-value pairs.
-     * @returns An iterable containing all map key-value pairs.
-     */
-    entries(): Iterable<MapEntry<TKey, TValue>>;
 }
