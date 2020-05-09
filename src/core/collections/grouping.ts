@@ -2,8 +2,12 @@ import { DeepReadonly } from '../types/deep-readonly';
 
 /** Represents a collection of objects with the same key. */
 export type Grouping<TKey, TValue> =
+Iterable<TValue> &
 {
+    /** Group key. */
     readonly key: DeepReadonly<TKey>;
+
+    /** Group items. */
     readonly items: ReadonlyArray<TValue>;
 };
 
@@ -20,6 +24,9 @@ export function makeGrouping<TKey, TValue>(
 {
     return {
         key: key,
-        items: items
+        items: items,
+        [Symbol.iterator]() {
+            return items[Symbol.iterator]();
+        }
     };
 }

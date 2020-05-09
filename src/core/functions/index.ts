@@ -1,6 +1,7 @@
 export * from './assert';
 export * from './deep-freeze';
 export * from './dynamic-cast';
+export * from './extend';
 export * from './instance-of-cast';
 export * from './is-defined';
 export * from './is-null';

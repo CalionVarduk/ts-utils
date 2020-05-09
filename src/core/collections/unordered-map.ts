@@ -7,6 +7,7 @@ import { isUndefined } from '../functions/is-undefined';
 import { Stringifier } from '../types/stringifier';
 import { Nullable } from '../types/nullable';
 
+/** Represents a map, or dictionary, data structure. */
 export class UnorderedMap<TKey, TValue>
     implements
     IReadonlyUnorderedMap<TKey, TValue>
@@ -25,6 +26,10 @@ export class UnorderedMap<TKey, TValue>
 
     private readonly _map: Map<string, MapEntry<TKey, TValue>>;
 
+    /**
+     * Creates a new UnorderedMap object.
+     * @param stringifier An optional, custom stringifier used for key comparison.
+     */
     public constructor(
         stringifier: Stringifier<TKey> = k => reinterpretCast<object>(k).toString())
     {
@@ -34,82 +39,118 @@ export class UnorderedMap<TKey, TValue>
 
     public get(key: DeepReadonly<TKey>): TValue
     {
-        const stringifiedKey = this.stringifier(key);
-        const entry = this._map.get(stringifiedKey);
+        const stringified = this.stringifier(key);
+        const entry = this._map.get(stringified);
 
         if (isUndefined(entry))
-            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] doesn't exist.`);
+            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringified}] doesn't exist.`);
 
         return entry.value;
     }
 
     public tryGet(key: DeepReadonly<TKey>): Nullable<TValue>
     {
-        const stringifiedKey = this.stringifier(key);
-        const entry = this._map.get(stringifiedKey);
+        const stringified = this.stringifier(key);
+        const entry = this._map.get(stringified);
         return isUndefined(entry) ? null : entry.value;
     }
 
     public has(key: DeepReadonly<TKey>): boolean
     {
-        const stringifiedKey = this.stringifier(key);
-        return this._map.has(stringifiedKey);
+        const stringified = this.stringifier(key);
+        return this._map.has(stringified);
     }
 
+    /**
+     * Returns a value associated with the provided key, or creates a new entry with a default value.
+     * @param key Key to get a value for.
+     * @param defaultValueProvider A function providing a default value, called when the key doesn't exist in order to create a new entry.
+     * @returns A value associated with the provided key.
+     */
     public getOrAdd(key: DeepReadonly<TKey>, defaultValueProvider: () => TValue): TValue
     {
-        const stringifiedKey = this.stringifier(key);
-        let entry = this._map.get(stringifiedKey);
+        const stringified = this.stringifier(key);
+        let entry = this._map.get(stringified);
 
         if (isUndefined(entry))
         {
             entry = makeMapEntry(key, defaultValueProvider());
-            this._map.set(stringifiedKey, entry);
+            this._map.set(stringified, entry);
         }
         return entry.value;
     }
 
+    /**
+     * Adds a new key-value pair to the map.
+     * @param key Key to add.
+     * @param value Value associated with the `key`.
+     * @throws An `Error`, if the key already exists.
+     */
     public add(key: DeepReadonly<TKey>, value: TValue): void
     {
-        const stringifiedKey = this.stringifier(key);
+        const stringified = this.stringifier(key);
 
-        if (this._map.has(stringifiedKey))
-            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] already exists.`);
+        if (this._map.has(stringified))
+            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringified}] already exists.`);
 
-        this._map.set(stringifiedKey, makeMapEntry(key, value));
+        this._map.set(stringified, makeMapEntry(key, value));
     }
 
+    /**
+     * Adds a new key-value pair to the map.
+     * @param key Key to add.
+     * @param value Value associated with the `key`.
+     * @returns `true`, if the key-value pair has been added successfully, or `false`, if the key already exists.
+     */
     public tryAdd(key: DeepReadonly<TKey>, value: TValue): boolean
     {
-        const stringifiedKey = this.stringifier(key);
+        const stringified = this.stringifier(key);
 
-        if (this._map.has(stringifiedKey))
+        if (this._map.has(stringified))
             return false;
 
-        this._map.set(stringifiedKey, makeMapEntry(key, value));
+        this._map.set(stringified, makeMapEntry(key, value));
         return true;
     }
 
+    /**
+     * Set a key-value pair in the map, either adding a new entry, or replacing an existing one.
+     * @param key Key to set.
+     * @param value Value associated with the `key`.
+     */
     public set(key: DeepReadonly<TKey>, value: TValue): void
     {
-        const stringifiedKey = this.stringifier(key);
-        this._map.set(stringifiedKey, makeMapEntry(key, value));
+        const stringified = this.stringifier(key);
+        this._map.set(stringified, makeMapEntry(key, value));
     }
 
+    /**
+     * Removes a key-value pair associated with the provided key from the map.
+     * @param key Key to remove.
+     * @throws An `Error`, if the key doesn't exist.
+     */
     public delete(key: DeepReadonly<TKey>): void
     {
-        const stringifiedKey = this.stringifier(key);
+        const stringified = this.stringifier(key);
 
-        if (!this._map.delete(stringifiedKey))
-            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringifiedKey}] doesn't exist.`);
+        if (!this._map.delete(stringified))
+            throw new Error(`unordered map entry with key ${JSON.stringify(key)} [${stringified}] doesn't exist.`);
     }
 
+    /**
+     * Removes a key-value pair associated with the provided key from the map.
+     * @param key Key to remove.
+     * @returns `true`, if the key-value pair has been removed successfully, or `false`, if the key doesn't exist.
+     */
     public tryDelete(key: DeepReadonly<TKey>): boolean
     {
-        const stringifiedKey = this.stringifier(key);
-        return this._map.delete(stringifiedKey);
+        const stringified = this.stringifier(key);
+        return this._map.delete(stringified);
     }
 
+    /**
+     * Removes all entries from the map.
+     */
     public clear(): void
     {
         this._map.clear();

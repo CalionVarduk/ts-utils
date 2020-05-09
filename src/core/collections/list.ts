@@ -142,7 +142,7 @@ export class List<T>
 
     /**
      * Removes the last node from the list and returns its value.
-     * @returns removed node's value, if the list is not empty, otherwise `null`.
+     * @returns Removed node's value, if the list is not empty, otherwise `null`.
      */
     public pop(): Nullable<T>
     {
@@ -182,7 +182,7 @@ export class List<T>
 
     /**
      * Removes the first node from the list and returns its value.
-     * @returns removed node's value, if the list is not empty, otherwise `null`.
+     * @returns Removed node's value, if the list is not empty, otherwise `null`.
      */
     public unshift(): Nullable<T>
     {
@@ -203,7 +203,7 @@ export class List<T>
     /**
      * Removes a node from the list.
      * @param node Node to remove.
-     * @throws If the `node` doesn't belong to the list.
+     * @throws An `Error`, if the `node` doesn't belong to the list.
      */
     public delete(node: IReadonlyListNode<T>): void
     {
@@ -227,7 +227,7 @@ export class List<T>
      * Inserts a new node to the list after the specified `target` node.
      * @param obj New node's value.
      * @param target Node to insert a new node after.
-     * @throws If the `target` node doesn't belong to the list.
+     * @throws An `Error`, if the `target` node doesn't belong to the list.
      * @returns New node.
      */
     public insertAfter(obj: T, target: IReadonlyListNode<T>): IReadonlyListNode<T>
@@ -240,8 +240,8 @@ export class List<T>
 
         if (listTarget === this._last)
         {
-            link(this._last!, listTarget);
-            this._last = listTarget;
+            link(this._last!, node);
+            this._last = node;
         }
         else
             insert(node, listTarget, listTarget.next!);
@@ -250,6 +250,13 @@ export class List<T>
         return node;
     }
 
+    /**
+     * Inserts a new node to the list before the specified `target` node.
+     * @param obj New node's value.
+     * @param target Node to insert a new node before.
+     * @throws An `Error`, if the `target` node doesn't belong to the list.
+     * @returns New node.
+     */
     public insertBefore(obj: T, target: IReadonlyListNode<T>): IReadonlyListNode<T>
     {
         const listTarget = instanceOfCast<ListNode<T>>(ListNode, target);
@@ -260,8 +267,8 @@ export class List<T>
 
         if (listTarget === this._first)
         {
-            link(listTarget, this._first!);
-            this._first = listTarget;
+            link(node, this._first!);
+            this._first = node;
         }
         else
             insert(node, listTarget.prev!, listTarget);
@@ -270,6 +277,9 @@ export class List<T>
         return node;
     }
 
+    /**
+     * Removes all nodes from the list.
+     */
     public clear(): void
     {
         let current = this._first;
