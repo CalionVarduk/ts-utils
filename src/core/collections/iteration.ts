@@ -22,6 +22,7 @@ import { isInstanceOfType } from '../functions/instance-of-cast';
 import { createIterable } from '../functions/create-iterable';
 import { ObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
+import { Rng } from '../rng';
 
 const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
@@ -747,6 +748,28 @@ export namespace Iteration
     {
         const result = isInstanceOfType<T[]>(Array, source) ? source : Iteration.ToArray(source);
         result.sort(reinterpretCast<(l: T, r: T) => number>(comparer));
+        return result;
+    }
+
+    /**
+     * Randomly shuffles an iterable.
+     * @param source Iterable to shuffle.
+     * @returns Shuffled array.
+     */
+    export function Shuffle<T>(
+        source: Iterable<T>):
+        T[]
+    {
+        const rng = new Rng();
+        const result = isInstanceOfType<T[]>(Array, source) ? source : Iteration.ToArray(source);
+
+        for (let i = result.length - 1; i >= 1; --i)
+        {
+            const j = rng.nextInt(0, i + 1);
+            const temp = result[i];
+            result[i] = result[j];
+            result[j] = temp;
+        }
         return result;
     }
 

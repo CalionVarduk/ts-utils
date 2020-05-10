@@ -785,6 +785,35 @@ test('Sort should return a sorted iterable',
     }
 );
 
+test('Shuffle should return a shuffled array',
+    () =>
+    {
+        const elements: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const original = [...elements];
+
+        const result = Iteration.Shuffle(elements);
+
+        expect(result).toBe(elements);
+        expect(result.length).toBe(original.length);
+        for (let i = 0; i < original.length; ++i)
+            expect(result).toContain(original[i]);
+    }
+);
+
+test('Shuffle should return a shuffled iterable',
+    () =>
+    {
+        const elements = Iteration.Filter([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], e => e < 10);
+        const original = Array.from(elements);
+
+        const result = Iteration.Shuffle(elements);
+
+        expect(result.length).toBe(original.length);
+        for (let i = 0; i < original.length; ++i)
+            expect(result).toContain(original[i]);
+    }
+);
+
 test('CopyTo should copy an iterable to the array',
     () =>
     {

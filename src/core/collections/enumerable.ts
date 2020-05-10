@@ -412,6 +412,17 @@ export class Enumerable<T>
     }
 
     /**
+     * Randomly shuffles an enumerable.
+     * @returns Shuffled enumerable.
+     */
+    public shuffle():
+        Enumerable<T>
+    {
+        return new Enumerable<T>(
+            Iteration.Shuffle(this._iterable));
+    }
+
+    /**
      * Copies an enumerable to an array.
      * @param target Array to copy to.
      * @param start An optional index of the first `target` element to replace with the first elelement of `source`. Equal to 0 by default.
