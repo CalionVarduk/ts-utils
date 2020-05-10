@@ -11,16 +11,6 @@ test('ctor should create a proper Stack object',
     }
 );
 
-test('ctor should create a proper Stack object',
-    () =>
-    {
-        const result = new Stack<number>();
-
-        expect(result.length).toBe(0);
-        expect(result.isEmpty).toBe(true);
-    }
-);
-
 test('peek should throw if stack is empty',
     () =>
     {

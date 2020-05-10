@@ -8,4 +8,5 @@ export * from './core/flag';
 export * from './core/lazy';
 export * from './core/mixin';
 export * from './core/repeated-action';
+export * from './core/rng';
 export * from './core/stopwatch';

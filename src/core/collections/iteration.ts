@@ -11,7 +11,7 @@ import { reinterpretCast } from '../functions/reinterpret-cast';
 import { isNull } from '../functions/is-null';
 import { Pair, makePair } from './pair';
 import { Nullable } from '../types/nullable';
-import { Undefinable, ObjectType, PrimitiveTypeNames } from '../types';
+import { Undefinable } from '../types/undefinable';
 import { EqualityComparer } from '../types/equality-comparer';
 import { Comparer } from '../types/comparer';
 import { List } from './list';
@@ -20,6 +20,8 @@ import { isUndefined } from '../functions/is-undefined';
 import { SafeCast, isOfType } from '../functions/dynamic-cast';
 import { isInstanceOfType } from '../functions/instance-of-cast';
 import { createIterable } from '../functions/create-iterable';
+import { ObjectType } from '../types/object-type';
+import { PrimitiveTypeNames } from '../types/primitive';
 
 const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
