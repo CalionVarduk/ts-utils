@@ -2,15 +2,13 @@ import { MapEntry } from './map-entry';
 import { DeepReadonly } from '../types/deep-readonly';
 import { Stringifier } from '../types/stringifier';
 import { Nullable } from '../types/nullable';
+import { IReadonlyCollection } from './readonly-collection.interface';
 
 /** Represents a readonly map, or dictionary, data structure. */
 export interface IReadonlyUnorderedMap<TKey, TValue>
     extends
-    Iterable<MapEntry<TKey, TValue>>
+    IReadonlyCollection<MapEntry<TKey, TValue>>
 {
-    /** Specifies the map's length. */
-    readonly length: number;
-
     /** Specifies whether or not the map is empty. */
     readonly isEmpty: boolean;
 

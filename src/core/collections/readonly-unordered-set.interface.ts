@@ -1,14 +1,12 @@
 import { DeepReadonly } from '../types/deep-readonly';
 import { Stringifier } from '../types/stringifier';
+import { IReadonlyCollection } from './readonly-collection.interface';
 
 /** Represents a readonly set data structure. */
 export interface IReadonlyUnorderedSet<T>
     extends
-    Iterable<T>
+    IReadonlyCollection<T>
 {
-    /** Specifies the set's length. */
-    readonly length: number;
-
     /** Specifies whether or not the set is empty. */
     readonly isEmpty: boolean;
 

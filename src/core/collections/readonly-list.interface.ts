@@ -1,14 +1,12 @@
 import { IReadonlyListNode } from './readonly-list-node.interface';
 import { Nullable } from '../types/nullable';
+import { IReadonlyCollection } from './readonly-collection.interface';
 
 /** Represents a readonly linked list data structure. */
 export interface IReadonlyList<T>
     extends
-    Iterable<T>
+    IReadonlyCollection<T>
 {
-    /** Specifies the list's length. */
-    readonly length: number;
-
     /** Specifies whether or not the list is empty. */
     readonly isEmpty: boolean;
 

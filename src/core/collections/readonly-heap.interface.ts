@@ -1,14 +1,12 @@
 import { Comparer } from '../types/comparer';
 import { Nullable } from '../types/nullable';
+import { IReadonlyCollection } from './readonly-collection.interface';
 
 /** Represents a readonly heap data structure. */
 export interface IReadonlyHeap<T>
     extends
-    Iterable<T>
+    IReadonlyCollection<T>
 {
-    /** Specifies the heap's length. */
-    readonly length: number;
-
     /** Specifies whether or not the heap is empty. */
     readonly isEmpty: boolean;
 
