@@ -1488,22 +1488,62 @@ test('TrySingle should return the only element for collection with one element',
     }
 );
 
-test('Memoize should return an array',
+test('Materialize should return an array',
     () =>
     {
         const elements: number[] = [1, 2, 3];
-        const result = Iteration.Memoize(elements);
+        const result = Iteration.Materialize(elements);
         expect(result).toBe(elements);
     }
 );
 
-test('Memoize should create a new array from iterable',
+test('Materialize should create a new array from iterable',
     () =>
     {
         const elements = Iteration.Filter([1, 2, 3], x => x > 0);
-        const result = Iteration.Memoize(elements);
+        const result = Iteration.Materialize(elements);
         assertIterable(result, [1, 2, 3]);
         expect(result instanceof Array).toBe(true);
+    }
+);
+
+test('Memoize should return an iterable returning an array',
+    () =>
+    {
+        const elements: number[] = [1, 2, 3];
+        const iteratorSymbol = elements[Symbol.iterator];
+        let iteratorSymbolCalled = false;
+        elements[Symbol.iterator] = () =>
+        {
+            iteratorSymbolCalled = true;
+            return iteratorSymbol.bind(elements)();
+        };
+
+        const result = Iteration.Memoize(elements);
+
+        expect(result).not.toBe(elements);
+        assertIterable(result, elements);
+        expect(iteratorSymbolCalled).toBe(true);
+    }
+);
+
+test('Memoize should return an iterable that caches results after first materialization',
+    () =>
+    {
+        let filterCallCount = 0;
+        const elements = Iteration.Filter([1, 2, 3], x =>
+            {
+                ++filterCallCount;
+                return x > 0;
+            });
+
+        const result = Iteration.Memoize(elements);
+        const firstArray = Array.from(result);
+        const secondArray = Array.from(result);
+
+        assertIterable(firstArray, [1, 2, 3]);
+        assertIterable(secondArray, [1, 2, 3]);
+        expect(filterCallCount).toBe(3);
     }
 );
 

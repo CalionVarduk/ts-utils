@@ -1,19 +1,25 @@
 import { UnorderedMap } from './unordered-map';
 import { MapEntry } from './map-entry';
-import { IReadonlyTableIndex } from './readonly-table-index.interface';
+import { IKeyedCollectionLookup } from './keyed-collection-lookup.interface';
 import { KeySelector } from './key-selector';
 import { Stringifier } from '../types/stringifier';
 import { DeepReadonly, toDeepReadonly } from '../types/deep-readonly';
 import { Nullable } from '../types';
 import { isNull } from '../functions/is-null';
+import { createIterable } from '../functions/create-iterable';
 
-export class TableIndex<TKey, TEntity>
+export class KeyedCollectionLookup<TKey, TEntity>
     implements
-    IReadonlyTableIndex<TKey, TEntity>
+    IKeyedCollectionLookup<TKey, TEntity>
 {
     public get length(): number
     {
         return this._map.length;
+    }
+
+    public get isEmpty(): boolean
+    {
+        return this._map.length === 0;
     }
 
     public get keyStringifier(): Stringifier<TKey>
@@ -41,7 +47,7 @@ export class TableIndex<TKey, TEntity>
         const result = this.tryGet(key);
 
         if (isNull(result))
-            throw new Error(`entity with key ${JSON.stringify(key)} doesn't exist in index '${this.name}'`);
+            throw new Error(`entity with key ${JSON.stringify(key)} doesn't exist in lookup '${this.name}'`);
 
         return result;
     }
@@ -54,20 +60,17 @@ export class TableIndex<TKey, TEntity>
     public getRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
     {
         const getter = this.get.bind(this);
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const key of keys)
                     yield getter(key);
-            }
-        };
+            });
     }
 
     public tryGetRange(keys: Iterable<DeepReadonly<TKey>>): Iterable<TEntity>
     {
         const getter = this.tryGet.bind(this);
-        return {
-            *[Symbol.iterator]()
+        return createIterable(function*()
             {
                 for (const key of keys)
                 {
@@ -75,8 +78,7 @@ export class TableIndex<TKey, TEntity>
                     if (!isNull(entity))
                         yield entity;
                 }
-            }
-        };
+            });
     }
 
     public getEntityKey(entity: DeepReadonly<TEntity>): DeepReadonly<TKey>
@@ -100,7 +102,7 @@ export class TableIndex<TKey, TEntity>
         const key = this.getEntityKey(toDeepReadonly(entity));
 
         if (!this._map.tryAdd(key, entity))
-            throw new Error(`index '${this.name}' already contains an entity with key ${JSON.stringify(key)}.`);
+            throw new Error(`lookup '${this.name}' already contains an entity with key ${JSON.stringify(key)}.`);
     }
 
     public tryAdd(entity: TEntity): boolean
@@ -114,13 +116,13 @@ export class TableIndex<TKey, TEntity>
         const key = this.getEntityKey(entity);
 
         if (!this._map.tryDelete(key))
-            throw new Error(`index '${this.name}' doesn't contain an entity with key ${JSON.stringify(key)}.`);
+            throw new Error(`lookup '${this.name}' doesn't contain an entity with key ${JSON.stringify(key)}.`);
     }
 
     public deleteByKey(key: DeepReadonly<TKey>): void
     {
         if (!this._map.tryDelete(key))
-            throw new Error(`index '${this.name}' doesn't contain an entity with key ${JSON.stringify(key)}.`);
+            throw new Error(`lookup '${this.name}' doesn't contain an entity with key ${JSON.stringify(key)}.`);
     }
 
     public clear(): void

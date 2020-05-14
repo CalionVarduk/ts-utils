@@ -632,6 +632,17 @@ export class Enumerable<T>
     }
 
     /**
+     * Materializes an enumerable immediately.
+     * @returns Materialized enumerable.
+     */
+    public materialize():
+        Enumerable<T>
+    {
+        return new Enumerable<T>(
+            Iteration.Materialize(this._iterable));
+    }
+
+    /**
      * Memoizes an enumerable.
      * @returns Memoized enumerable.
      */

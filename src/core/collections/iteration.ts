@@ -23,6 +23,7 @@ import { createIterable } from '../functions/create-iterable';
 import { ObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
 import { Rng } from '../rng';
+import { Lazy } from '../lazy';
 
 const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
@@ -1186,6 +1187,18 @@ export namespace Iteration
     }
 
     /**
+     * Materializes an iterable immediately.
+     * @param source Iterable to materialize.
+     * @returns Materialized iterable.
+     */
+    export function Materialize<T>(
+        source: Iterable<T>):
+        Iterable<T>
+    {
+        return isInstanceOfType<T[]>(Array, source) ? source : Array.from(source);
+    }
+
+    /**
      * Memoizes an iterable.
      * @param source Iterable to memoize.
      * @returns Memoized iterable.
@@ -1194,7 +1207,11 @@ export namespace Iteration
         source: Iterable<T>):
         Iterable<T>
     {
-        return isInstanceOfType<T[]>(Array, source) ? source : Array.from(source);
+        const memoized = new Lazy<T[]>(() => isInstanceOfType<T[]>(Array, source) ? source : Array.from(source));
+        return createIterable(function()
+            {
+                return memoized.value[Symbol.iterator]();
+            });
     }
 
     /**
