@@ -167,20 +167,20 @@ test('pop should return last element for list',
     }
 );
 
-test('shift should add first element properly',
+test('unshift should add first element properly',
     () =>
     {
         const value = 10;
         const list = new List<number>();
 
-        const result = list.shift(value);
+        const result = list.unshift(value);
 
         assertList(list, [value]);
         expect(result).toBe(list.first);
     }
 );
 
-test('shift should add another element properly',
+test('unshift should add another element properly',
     () =>
     {
         const firstValue = 0;
@@ -188,33 +188,33 @@ test('shift should add another element properly',
         const list = new List<number>();
         list.push(firstValue);
 
-        const result = list.shift(value);
+        const result = list.unshift(value);
 
         assertList(list, [value, firstValue]);
         expect(result).toBe(list.first);
     }
 );
 
-test('unshift should return null for empty list',
+test('shift should return null for empty list',
     () =>
     {
         const list = new List<number>();
 
-        const result = list.unshift();
+        const result = list.shift();
 
         assertList(list, []);
         expect(result).toBeNull();
     }
 );
 
-test('unshift should return first element for list, with one element',
+test('shift should return first element for list, with one element',
     () =>
     {
         const value = 10;
         const list = new List<number>();
         const node = list.push(value);
 
-        const result = list.unshift();
+        const result = list.shift();
 
         assertList(list, []);
         assertRemovedNode(node, value);
@@ -222,7 +222,7 @@ test('unshift should return first element for list, with one element',
     }
 );
 
-test('unshift should return first element for list',
+test('shift should return first element for list',
     () =>
     {
         const value = 10;
@@ -231,7 +231,7 @@ test('unshift should return first element for list',
         const node = list.push(value);
         list.push(secondValue);
 
-        const result = list.unshift();
+        const result = list.shift();
 
         assertList(list, [secondValue]);
         assertRemovedNode(node, value);

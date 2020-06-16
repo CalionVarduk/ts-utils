@@ -17,13 +17,16 @@ import { Comparer } from '../types/comparer';
 import { List } from './list';
 import { readonlyCast } from '../functions/readonly-cast';
 import { isUndefined } from '../functions/is-undefined';
-import { SafeCast, isOfType } from '../functions/dynamic-cast';
+import { isOfType } from '../functions/dynamic-cast';
 import { isInstanceOfType } from '../functions/instance-of-cast';
 import { createIterable } from '../functions/create-iterable';
 import { ObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
 import { Rng } from '../rng';
 import { Lazy } from '../lazy';
+import { TypeInstance } from '../types/type-instance';
+
+// TODO: add things like HasAtLeast, HasAtMost, HasBetween, HasExactly
 
 const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
@@ -673,7 +676,7 @@ export namespace Iteration
     export function OfType<T extends ObjectType | PrimitiveTypeNames>(
         source: Iterable<any>,
         type: T):
-        Iterable<SafeCast<T>>
+        Iterable<TypeInstance<T>>
     {
         return createIterable(function*()
             {

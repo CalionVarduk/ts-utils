@@ -1,15 +1,14 @@
 import { ObjectType } from '../types/object-type';
-import { PrimitiveTypeNames, PrimitiveTypesMap } from '../types/primitive';
+import { PrimitiveTypeNames } from '../types/primitive';
 import { primitiveCast, isPrimitiveOfType } from './primitive-cast';
 import { instanceOfCast, isInstanceOfType } from './instance-of-cast';
 import { reinterpretCast } from './reinterpret-cast';
 import { Nullable } from '../types/nullable';
+import { TypeInstance } from '../types/type-instance';
 
-/** SafeCast type alias. */
-export type SafeCast<TType extends ObjectType | PrimitiveTypeNames> =
-    TType extends ObjectType<infer TResult> ? TResult :
-    TType extends PrimitiveTypeNames ? PrimitiveTypesMap[TType] :
-    never;
+/** DynamicCastType type alias. */
+export type DynamicCastType<T extends object | PrimitiveTypeNames> =
+    T extends object ? ObjectType<T> : T;
 
 /**
  * Casts an object to the provided type, if that object is of that type.
@@ -18,10 +17,10 @@ export type SafeCast<TType extends ObjectType | PrimitiveTypeNames> =
  * @returns If type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`,
  * then `obj` cast to `TType`, otherwise `null`.
  * */
-export function dynamicCast<TType extends ObjectType | PrimitiveTypeNames>(
-    targetType: TType,
+export function dynamicCast<TType extends object | PrimitiveTypeNames>(
+    targetType: DynamicCastType<TType>,
     obj: any):
-    Nullable<SafeCast<TType>>
+    Nullable<TypeInstance<DynamicCastType<TType>>>
 {
     return typeof targetType === 'string' ?
         primitiveCast(reinterpretCast<PrimitiveTypeNames>(targetType), obj) :
@@ -34,10 +33,10 @@ export function dynamicCast<TType extends ObjectType | PrimitiveTypeNames>(
  * @param obj Object to check.
  * @returns If type `TType` exists in the prototype chain of `obj` or if `obj` is `typeof` `TType`, then `true`, otherwise `false`.
  */
-export function isOfType<TType extends ObjectType | PrimitiveTypeNames>(
-    targetType: TType,
+export function isOfType<TType extends object | PrimitiveTypeNames>(
+    targetType: DynamicCastType<TType>,
     obj: any):
-    obj is SafeCast<TType>
+    obj is TypeInstance<DynamicCastType<TType>>
 {
     return typeof targetType === 'string' ?
         isPrimitiveOfType(reinterpretCast<PrimitiveTypeNames>(targetType), obj) :

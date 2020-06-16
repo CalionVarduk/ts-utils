@@ -15,4 +15,5 @@ export * from './optional';
 export * from './primitive';
 export * from './ref';
 export * from './stringifier';
+export * from './type-instance';
 export * from './undefinable';

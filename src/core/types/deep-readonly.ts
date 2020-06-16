@@ -3,8 +3,7 @@ import { None } from './none';
 
 /** Deep readonly type alias. */
 export type DeepReadonly<T> =
-T extends None ?
-T :
+T extends None ? T :
 {
     readonly [P in keyof T]:
         T[P] extends Function ? T[P] :

@@ -16,8 +16,8 @@ import { EqualityComparer } from '../types/equality-comparer';
 import { List } from './list';
 import { ObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
-import { SafeCast } from '../functions/dynamic-cast';
 import { DeepReadonly } from '../types/deep-readonly';
+import { TypeInstance } from '../types/type-instance';
 
 /** Represents an enumerable collection. */
 export class Enumerable<T>
@@ -359,9 +359,9 @@ export class Enumerable<T>
      */
     public ofType<U extends ObjectType | PrimitiveTypeNames>(
         type: U):
-        Enumerable<SafeCast<U>>
+        Enumerable<TypeInstance<U>>
     {
-        return new Enumerable<SafeCast<U>>(
+        return new Enumerable<TypeInstance<U>>(
             Iteration.OfType(this._iterable, type));
     }
 

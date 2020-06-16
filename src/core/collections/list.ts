@@ -165,7 +165,7 @@ export class List<T>
      * @param obj New node's value.
      * @returns New node.
      */
-    public shift(obj: T): IReadonlyListNode<T>
+    public unshift(obj: T): IReadonlyListNode<T>
     {
         const node = new ListNode<T>(this, obj);
 
@@ -184,7 +184,7 @@ export class List<T>
      * Removes the first node from the list and returns its value.
      * @returns Removed node's value, if the list is not empty, otherwise `null`.
      */
-    public unshift(): Nullable<T>
+    public shift(): Nullable<T>
     {
         if (this.isEmpty)
             return null;
