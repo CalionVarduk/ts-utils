@@ -26,8 +26,6 @@ import { Rng } from '../rng';
 import { Lazy } from '../lazy';
 import { TypeInstance } from '../types/type-instance';
 
-// TODO: add things like HasAtLeast, HasAtMost, HasBetween, HasExactly
-
 const EMPTY_ITERATOR_RESULT: any = readonlyCast(Object.freeze({
     done: true
 }));
@@ -1018,6 +1016,105 @@ export namespace Iteration
             ++result;
 
         return result;
+    }
+
+    /**
+     * Checks if an iterable contains at least `count` elements.
+     * @param source Iterable to check.
+     * @param count Count to check.
+     * @returns `true`, if iterable contains at least `count` elements, otherwise `false`.
+     */
+    export function HasAtLeast<T>(
+        source: Iterable<T>,
+        count: number):
+        boolean
+    {
+        if (count <= 0)
+            return true;
+
+        if (isInstanceOfType<T[]>(Array, source))
+            return source.length >= count;
+
+        return !Iteration.IsEmpty(Iteration.Skip(source, count - 1));
+    }
+
+    /**
+     * Checks if an iterable contains at most `count` elements.
+     * @param source Iterable to check.
+     * @param count Count to check.
+     * @returns `true`, if iterable contains at most `count` elements, otherwise `false`.
+     */
+    export function HasAtMost<T>(
+        source: Iterable<T>,
+        count: number):
+        boolean
+    {
+        if (count < 0)
+            return false;
+
+        if (isInstanceOfType<T[]>(Array, source))
+            return source.length <= count;
+
+        return Iteration.IsEmpty(Iteration.Skip(source, count));
+    }
+
+    /**
+     * Checks if an iterable contains exactly `count` elements.
+     * @param source Iterable to check.
+     * @param count Count to check.
+     * @returns `true`, if iterable contains exactly `count` elements, otherwise `false`.
+     */
+    export function HasExactly<T>(
+        source: Iterable<T>,
+        count: number):
+        boolean
+    {
+        if (count < 0)
+            return false;
+
+        if (isInstanceOfType<T[]>(Array, source))
+            return source.length === count;
+
+        if (count === 0)
+            return Iteration.IsEmpty(source);
+
+        const skipped = Iteration.Skip(source, count - 1);
+        if (Iteration.IsEmpty(skipped))
+            return false;
+
+        return Iteration.IsEmpty(Iteration.Skip(skipped, 1));
+    }
+
+    /**
+     * Checks if an iterable contains at least `minCount` and at most `maxCount` elements.
+     * @param source Iterable to check.
+     * @param minCount Min count to check.
+     * @param maxCount Max count to check.
+     * @returns `true`, if iterable contains at least `minCount` and at most `maxCount` elements, otherwise `false`.
+     */
+    export function HasBetween<T>(
+        source: Iterable<T>,
+        minCount: number,
+        maxCount: number):
+        boolean
+    {
+        if (minCount < 0)
+            minCount = 0;
+
+        if (minCount > maxCount || maxCount < 0)
+            return false;
+
+        if (isInstanceOfType<T[]>(Array, source))
+            return source.length >= minCount && source.length <= maxCount;
+
+        if (minCount === 0)
+            return Iteration.IsEmpty(Iteration.Skip(source, maxCount));
+
+        const skipped = Iteration.Skip(source, minCount - 1);
+        if (Iteration.IsEmpty(skipped))
+            return false;
+
+        return Iteration.IsEmpty(Iteration.Skip(skipped, maxCount - minCount + 1));
     }
 
     /**

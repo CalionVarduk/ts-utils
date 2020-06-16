@@ -24,7 +24,7 @@ export class Enumerable<T>
     implements
     Iterable<T>
 {
-    private readonly _iterable: Iterable<T>;
+    public readonly iterable: Iterable<T>;
 
     /**
      * Creates a new Enumerable object.
@@ -32,7 +32,7 @@ export class Enumerable<T>
      */
     public constructor(iterable: Iterable<T>)
     {
-        this._iterable = iterable;
+        this.iterable = iterable;
     }
 
     /**
@@ -43,7 +43,7 @@ export class Enumerable<T>
         Enumerable<Ensured<T>>
     {
         return new Enumerable<Ensured<T>>(
-            reinterpretCast<Iterable<Ensured<T>>>(Iteration.FilterDefinedOnly(this._iterable)));
+            reinterpretCast<Iterable<Ensured<T>>>(Iteration.FilterDefinedOnly(this.iterable)));
     }
 
     /**
@@ -54,7 +54,7 @@ export class Enumerable<T>
         Enumerable<NotNull<T>>
     {
         return new Enumerable<NotNull<T>>(
-            reinterpretCast<Iterable<NotNull<T>>>(Iteration.FilterNotNull(this._iterable)));
+            reinterpretCast<Iterable<NotNull<T>>>(Iteration.FilterNotNull(this.iterable)));
     }
 
     /**
@@ -65,7 +65,7 @@ export class Enumerable<T>
         Enumerable<NotUndefined<T>>
     {
         return new Enumerable<NotUndefined<T>>(
-            reinterpretCast<Iterable<NotUndefined<T>>>(Iteration.FilterNotUndefined(this._iterable)));
+            reinterpretCast<Iterable<NotUndefined<T>>>(Iteration.FilterNotUndefined(this.iterable)));
     }
 
     /**
@@ -78,7 +78,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Filter(this._iterable, predicate));
+            Iteration.Filter(this.iterable, predicate));
     }
 
     /**
@@ -91,7 +91,7 @@ export class Enumerable<T>
         Enumerable<U>
     {
         return new Enumerable<U>(
-            Iteration.Map(this._iterable, mapper));
+            Iteration.Map(this.iterable, mapper));
     }
 
     /**
@@ -104,7 +104,7 @@ export class Enumerable<T>
         Enumerable<U>
     {
         return new Enumerable<U>(
-            Iteration.MapMany(this._iterable, mapper));
+            Iteration.MapMany(this.iterable, mapper));
     }
 
     /**
@@ -117,7 +117,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Concat(this._iterable, other));
+            Iteration.Concat(this.iterable, other));
     }
 
     /**
@@ -130,7 +130,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Repeat(this._iterable, count));
+            Iteration.Repeat(this.iterable, count));
     }
 
     /**
@@ -141,7 +141,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Loop(this._iterable));
+            Iteration.Loop(this.iterable));
     }
 
     /**
@@ -154,7 +154,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Take(this._iterable, count));
+            Iteration.Take(this.iterable, count));
     }
 
     /**
@@ -167,7 +167,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.TakeWhile(this._iterable, predicate));
+            Iteration.TakeWhile(this.iterable, predicate));
     }
 
     /**
@@ -180,7 +180,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Skip(this._iterable, count));
+            Iteration.Skip(this.iterable, count));
     }
 
     /**
@@ -193,7 +193,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.SkipWhile(this._iterable, predicate));
+            Iteration.SkipWhile(this.iterable, predicate));
     }
 
     /**
@@ -207,7 +207,7 @@ export class Enumerable<T>
         Enumerable<Pair<T, U>>
     {
         return new Enumerable<Pair<T, U>>(
-            Iteration.Zip(this._iterable, other));
+            Iteration.Zip(this.iterable, other));
     }
 
     /**
@@ -220,7 +220,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Unique(this._iterable, objectStringifier));
+            Iteration.Unique(this.iterable, objectStringifier));
     }
 
     /**
@@ -235,7 +235,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Intersect(this._iterable, other, objectStringifier));
+            Iteration.Intersect(this.iterable, other, objectStringifier));
     }
 
     /**
@@ -250,7 +250,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Union(this._iterable, other, objectStringifier));
+            Iteration.Union(this.iterable, other, objectStringifier));
     }
 
     /**
@@ -265,7 +265,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Except(this._iterable, other, objectStringifier));
+            Iteration.Except(this.iterable, other, objectStringifier));
     }
 
     /**
@@ -286,7 +286,7 @@ export class Enumerable<T>
         Enumerable<TResult>
     {
         return new Enumerable<TResult>(
-            Iteration.LeftJoin(this._iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
+            Iteration.LeftJoin(this.iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
     }
 
     /**
@@ -307,7 +307,7 @@ export class Enumerable<T>
         Enumerable<TResult>
     {
         return new Enumerable<TResult>(
-            Iteration.InnerJoin(this._iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
+            Iteration.InnerJoin(this.iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
     }
 
     /**
@@ -328,7 +328,7 @@ export class Enumerable<T>
         Enumerable<TResult>
     {
         return new Enumerable<TResult>(
-            Iteration.FullJoin(this._iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
+            Iteration.FullJoin(this.iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
     }
 
     /**
@@ -349,7 +349,7 @@ export class Enumerable<T>
         Enumerable<TResult>
     {
         return new Enumerable<TResult>(
-            Iteration.GroupJoin(this._iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
+            Iteration.GroupJoin(this.iterable, sourceKeySelector, inner, innerKeySelector, resultMapper, keyStringifier));
     }
 
     /**
@@ -362,7 +362,7 @@ export class Enumerable<T>
         Enumerable<TypeInstance<U>>
     {
         return new Enumerable<TypeInstance<U>>(
-            Iteration.OfType(this._iterable, type));
+            Iteration.OfType(this.iterable, type));
     }
 
     /**
@@ -373,7 +373,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Reverse(this._iterable));
+            Iteration.Reverse(this.iterable));
     }
 
     /**
@@ -384,7 +384,7 @@ export class Enumerable<T>
         Enumerable<U>
     {
         return new Enumerable<U>(
-            Iteration.ReinterpretCast<U>(this._iterable));
+            Iteration.ReinterpretCast<U>(this.iterable));
     }
 
     /**
@@ -395,7 +395,7 @@ export class Enumerable<T>
         Enumerable<DeepReadonly<T>>
     {
         return new Enumerable<DeepReadonly<T>>(
-            Iteration.AsDeepReadonly(this._iterable));
+            Iteration.AsDeepReadonly(this.iterable));
     }
 
     /**
@@ -408,7 +408,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Sort(this._iterable, comparer));
+            Iteration.Sort(this.iterable, comparer));
     }
 
     /**
@@ -419,7 +419,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Shuffle(this._iterable));
+            Iteration.Shuffle(this.iterable));
     }
 
     /**
@@ -435,7 +435,7 @@ export class Enumerable<T>
         length?: number):
         T[]
     {
-        return Iteration.CopyTo(this._iterable, target, start, length);
+        return Iteration.CopyTo(this.iterable, target, start, length);
     }
 
     /**
@@ -451,7 +451,7 @@ export class Enumerable<T>
         keyStringifier?: Stringifier<TKey>):
         IReadonlyUnorderedMap<TKey, Grouping<TKey, TValue>>
     {
-        return Iteration.GroupBy(this._iterable, keySelector, valueSelector, keyStringifier);
+        return Iteration.GroupBy(this.iterable, keySelector, valueSelector, keyStringifier);
     }
 
     /**
@@ -466,7 +466,7 @@ export class Enumerable<T>
         comparer?: EqualityComparer<T>):
         boolean
     {
-        return Iteration.SequenceEquals(this._iterable, other, comparer);
+        return Iteration.SequenceEquals(this.iterable, other, comparer);
     }
 
     /**
@@ -480,7 +480,7 @@ export class Enumerable<T>
         objectStringifier?: Stringifier<T>):
         boolean
     {
-        return Iteration.SetEquals(this._iterable, other, objectStringifier);
+        return Iteration.SetEquals(this.iterable, other, objectStringifier);
     }
 
     /**
@@ -490,7 +490,7 @@ export class Enumerable<T>
     public isEmpty():
         boolean
     {
-        return Iteration.IsEmpty(this._iterable);
+        return Iteration.IsEmpty(this.iterable);
     }
 
     /**
@@ -502,7 +502,7 @@ export class Enumerable<T>
         predicate: (obj: T, index: number) => boolean):
         boolean
     {
-        return Iteration.Some(this._iterable, predicate);
+        return Iteration.Some(this.iterable, predicate);
     }
 
     /**
@@ -514,7 +514,7 @@ export class Enumerable<T>
         predicate: (obj: T, index: number) => boolean):
         boolean
     {
-        return Iteration.Every(this._iterable, predicate);
+        return Iteration.Every(this.iterable, predicate);
     }
 
     /**
@@ -528,7 +528,7 @@ export class Enumerable<T>
         comparer?: EqualityComparer<T>):
         boolean
     {
-        return Iteration.Has(this._iterable, object, comparer);
+        return Iteration.Has(this.iterable, object, comparer);
     }
 
     /**
@@ -538,7 +538,57 @@ export class Enumerable<T>
     public count():
         number
     {
-        return Iteration.Count(this._iterable);
+        return Iteration.Count(this.iterable);
+    }
+
+    /**
+     * Checks if an enumerable contains at least `count` elements.
+     * @param count Count to check.
+     * @returns `true`, if enumerable contains at least `count` elements, otherwise `false`.
+     */
+    public hasAtLeast(
+        count: number):
+        boolean
+    {
+        return Iteration.HasAtLeast(this.iterable, count);
+    }
+
+    /**
+     * Checks if an enumerable contains at most `count` elements.
+     * @param count Count to check.
+     * @returns `true`, if enumerable contains at most `count` elements, otherwise `false`.
+     */
+    public hasAtMost(
+        count: number):
+        boolean
+    {
+        return Iteration.HasAtMost(this.iterable, count);
+    }
+
+    /**
+     * Checks if an enumerable contains exactly `count` elements.
+     * @param count Count to check.
+     * @returns `true`, if enumerable contains exactly `count` elements, otherwise `false`.
+     */
+    public hasExactly(
+        count: number):
+        boolean
+    {
+        return Iteration.HasExactly(this.iterable, count);
+    }
+
+    /**
+     * Checks if an enumerable contains at least `minCount` and at most `maxCount` elements.
+     * @param minCount Min count to check.
+     * @param maxCount Max count to check.
+     * @returns `true`, if enumerable contains at least `minCount` and at most `maxCount` elements, otherwise `false`.
+     */
+    public hasBetween(
+        minCount: number,
+        maxCount: number):
+        boolean
+    {
+        return Iteration.HasBetween(this.iterable, minCount, maxCount);
     }
 
     /**
@@ -549,7 +599,7 @@ export class Enumerable<T>
     public first():
         T
     {
-        return Iteration.First(this._iterable);
+        return Iteration.First(this.iterable);
     }
 
     /**
@@ -559,7 +609,7 @@ export class Enumerable<T>
     public tryFirst():
         Nullable<T>
     {
-        return Iteration.TryFirst(this._iterable);
+        return Iteration.TryFirst(this.iterable);
     }
 
     /**
@@ -570,7 +620,7 @@ export class Enumerable<T>
     public last():
         T
     {
-        return Iteration.Last(this._iterable);
+        return Iteration.Last(this.iterable);
     }
 
     /**
@@ -580,7 +630,7 @@ export class Enumerable<T>
     public tryLast():
         Nullable<T>
     {
-        return Iteration.TryLast(this._iterable);
+        return Iteration.TryLast(this.iterable);
     }
 
     /**
@@ -593,7 +643,7 @@ export class Enumerable<T>
         index: number):
         T
     {
-        return Iteration.At(this._iterable, index);
+        return Iteration.At(this.iterable, index);
     }
 
     /**
@@ -607,7 +657,7 @@ export class Enumerable<T>
         index: number):
         Nullable<T>
     {
-        return Iteration.TryAt(this._iterable, index);
+        return Iteration.TryAt(this.iterable, index);
     }
 
     /**
@@ -618,7 +668,7 @@ export class Enumerable<T>
     public single():
         T
     {
-        return Iteration.Single(this._iterable);
+        return Iteration.Single(this.iterable);
     }
 
     /**
@@ -628,7 +678,7 @@ export class Enumerable<T>
     public trySingle():
         Nullable<T>
     {
-        return Iteration.TrySingle(this._iterable);
+        return Iteration.TrySingle(this.iterable);
     }
 
     /**
@@ -639,7 +689,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Materialize(this._iterable));
+            Iteration.Materialize(this.iterable));
     }
 
     /**
@@ -650,7 +700,7 @@ export class Enumerable<T>
         Enumerable<T>
     {
         return new Enumerable<T>(
-            Iteration.Memoize(this._iterable));
+            Iteration.Memoize(this.iterable));
     }
 
     /**
@@ -660,7 +710,7 @@ export class Enumerable<T>
     public toArray():
         T[]
     {
-        return Iteration.ToArray(this._iterable);
+        return Iteration.ToArray(this.iterable);
     }
 
     /**
@@ -670,7 +720,7 @@ export class Enumerable<T>
     public toList():
         List<T>
     {
-        return Iteration.ToList(this._iterable);
+        return Iteration.ToList(this.iterable);
     }
 
     /**
@@ -682,7 +732,7 @@ export class Enumerable<T>
         objectStringifier?: Stringifier<T>):
         UnorderedSet<T>
     {
-        return Iteration.ToSet(this._iterable, objectStringifier);
+        return Iteration.ToSet(this.iterable, objectStringifier);
     }
 
     /**
@@ -698,7 +748,7 @@ export class Enumerable<T>
         keyStringifier?: Stringifier<TKey>):
         UnorderedMap<TKey, TValue>
     {
-        return Iteration.ToMap(this._iterable, keySelector, valueSelector, keyStringifier);
+        return Iteration.ToMap(this.iterable, keySelector, valueSelector, keyStringifier);
     }
 
     /**
@@ -709,7 +759,7 @@ export class Enumerable<T>
         callback: (obj: T, index: number) => void):
         void
     {
-        Iteration.ForEach(this._iterable, callback);
+        Iteration.ForEach(this.iterable, callback);
     }
 
     /**
@@ -723,7 +773,7 @@ export class Enumerable<T>
         seed: TResult):
         TResult
     {
-        return Iteration.Reduce(this._iterable, callback, seed);
+        return Iteration.Reduce(this.iterable, callback, seed);
     }
 
     /**
@@ -735,21 +785,11 @@ export class Enumerable<T>
         objectStringifier?: Stringifier<T>):
         boolean
     {
-        return Iteration.HasDuplicates(this._iterable, objectStringifier);
-    }
-
-    /**
-     * Returns an underlying iterable.
-     * @returns An underlying iterable.
-     */
-    public getUnderlyingIterable():
-        Iterable<T>
-    {
-        return this._iterable;
+        return Iteration.HasDuplicates(this.iterable, objectStringifier);
     }
 
     public* [Symbol.iterator](): IterableIterator<T>
     {
-        yield* this._iterable;
+        yield* this.iterable;
     }
 }

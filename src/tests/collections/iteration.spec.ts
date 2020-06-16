@@ -1298,6 +1298,264 @@ test('Count should return 0 for empty iterable',
     }
 );
 
+each([
+    [-1, true],
+    [0, true],
+    [1, true],
+    [2, true],
+    [3, true],
+    [4, false]
+])
+.test('HasAtLeast should return a valid result, for array (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements: number[] = [1, 2, 3];
+        const result = Iteration.HasAtLeast(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, true],
+    [0, true],
+    [1, true],
+    [2, true],
+    [3, true],
+    [4, false]
+])
+.test('HasAtLeast should return a valid result (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Filter([1, 2, 3], x => x > 0);
+        const result = Iteration.HasAtLeast(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, true],
+    [0, true],
+    [1, false]
+])
+.test('HasAtLeast should return a valid result for empty (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Empty<number>();
+        const result = Iteration.HasAtLeast(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, false],
+    [1, false],
+    [2, false],
+    [3, true],
+    [4, true]
+])
+.test('HasAtMost should return a valid result, for array (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements: number[] = [1, 2, 3];
+        const result = Iteration.HasAtMost(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, false],
+    [1, false],
+    [2, false],
+    [3, true],
+    [4, true]
+])
+.test('HasAtMost should return a valid result (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Filter([1, 2, 3], x => x > 0);
+        const result = Iteration.HasAtMost(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, true],
+    [1, true]
+])
+.test('HasAtMost should return a valid result for empty (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Empty<number>();
+        const result = Iteration.HasAtMost(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, false],
+    [1, false],
+    [2, false],
+    [3, true],
+    [4, false]
+])
+.test('HasExactly should return a valid result, for array (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements: number[] = [1, 2, 3];
+        const result = Iteration.HasExactly(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, false],
+    [1, false],
+    [2, false],
+    [3, true],
+    [4, false]
+])
+.test('HasExactly should return a valid result (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Filter([1, 2, 3], x => x > 0);
+        const result = Iteration.HasExactly(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, false],
+    [0, true],
+    [1, false]
+])
+.test('HasExactly should return a valid result for empty (%#): count: %f, expected: %s',
+    (count: number, expected: boolean) =>
+    {
+        const elements = Iteration.Empty<number>();
+        const result = Iteration.HasExactly(elements, count);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, -1, false],
+    [-1, 0, false],
+    [-1, 1, false],
+    [-1, 2, false],
+    [-1, 3, true],
+    [-1, 4, true],
+    [0, -1, false],
+    [0, 0, false],
+    [0, 1, false],
+    [0, 2, false],
+    [0, 3, true],
+    [0, 4, true],
+    [1, -1, false],
+    [1, 0, false],
+    [1, 1, false],
+    [1, 2, false],
+    [1, 3, true],
+    [1, 4, true],
+    [2, -1, false],
+    [2, 0, false],
+    [2, 1, false],
+    [2, 2, false],
+    [2, 3, true],
+    [2, 4, true],
+    [3, -1, false],
+    [3, 0, false],
+    [3, 1, false],
+    [3, 2, false],
+    [3, 3, true],
+    [3, 4, true],
+    [4, -1, false],
+    [4, 0, false],
+    [4, 1, false],
+    [4, 2, false],
+    [4, 3, false],
+    [4, 4, false]
+])
+.test('HasBetween should return a valid result, for array (%#): min count: %f, max count: %f, expected: %s',
+    (minCount: number, maxCount: number, expected: boolean) =>
+    {
+        const elements: number[] = [1, 2, 3];
+        const result = Iteration.HasBetween(elements, minCount, maxCount);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, -1, false],
+    [-1, 0, false],
+    [-1, 1, false],
+    [-1, 2, false],
+    [-1, 3, true],
+    [-1, 4, true],
+    [0, -1, false],
+    [0, 0, false],
+    [0, 1, false],
+    [0, 2, false],
+    [0, 3, true],
+    [0, 4, true],
+    [1, -1, false],
+    [1, 0, false],
+    [1, 1, false],
+    [1, 2, false],
+    [1, 3, true],
+    [1, 4, true],
+    [2, -1, false],
+    [2, 0, false],
+    [2, 1, false],
+    [2, 2, false],
+    [2, 3, true],
+    [2, 4, true],
+    [3, -1, false],
+    [3, 0, false],
+    [3, 1, false],
+    [3, 2, false],
+    [3, 3, true],
+    [3, 4, true],
+    [4, -1, false],
+    [4, 0, false],
+    [4, 1, false],
+    [4, 2, false],
+    [4, 3, false],
+    [4, 4, false]
+])
+.test('HasBetween should return a valid result (%#): min count: %f, max count: %f, expected: %s',
+    (minCount: number, maxCount: number, expected: boolean) =>
+    {
+        const elements = Iteration.Filter([1, 2, 3], x => x > 0);
+        const result = Iteration.HasBetween(elements, minCount, maxCount);
+        expect(result).toBe(expected);
+    }
+);
+
+each([
+    [-1, -1, false],
+    [-1, 0, true],
+    [-1, 1, true],
+    [0, -1, false],
+    [0, 0, true],
+    [0, 1, true],
+    [1, -1, false],
+    [1, 0, false],
+    [1, 1, false]
+])
+.test('HasBetween should return a valid result for empty (%#): min count: %f, max count: %f, expected: %s',
+    (minCount: number, maxCount: number, expected: boolean) =>
+    {
+        const elements = Iteration.Empty<number>();
+        const result = Iteration.HasBetween(elements, minCount, maxCount);
+        expect(result).toBe(expected);
+    }
+);
+
 test('First should throw for empty collection',
     () =>
     {
