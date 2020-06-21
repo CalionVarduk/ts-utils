@@ -113,6 +113,26 @@ const nullNumber = dynamicCast('number', obj);
 const nullBar = dynamicCast(Bar, obj);
 ```
 
+It works for generic types too, however the generic parameters won't be validated:
+```typescript
+class Generic<T>
+{
+    public constructor(public value: T) {}
+}
+
+const foo = new Generic<number>(0);
+
+// returns foo as a Generic<string> object
+// note, how the result type has to specified explicitly
+// otherwise, the resulting type would be Generic<unknown>
+// which may, or may not be, something you want
+const bar = dynamicCast<Generic<string>>(Generic, foo);
+
+const str = 'foo';
+// returns null
+const nullStr = dynamicCast<Generic<Date>>(Generic, str);
+```
+
 - [isOfType\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/dynamic-cast.ts#L36) - allows to check, if an object is of specified type. Works for object and primitive types. This is very similar to the `dynamicCast<T>` function, however, instead of returning a cast object or `null`, it returns `true` or `false` instead, respectively.
 
 - [extend\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/extend.ts#L12) - creates a function extension.
@@ -129,6 +149,26 @@ const foo: Foo = new Bar();
 const bar = instanceOfCast(Bar, foo);
 // returns null
 const nullDate = instanceOfCast(Date, foo);
+```
+
+Similar to `dynamicCast<T>`, it works for generic types too:
+```typescript
+class Generic<T>
+{
+    public constructor(public value: T) {}
+}
+
+const foo = new Generic<number>(0);
+
+// returns foo as a Generic<string> object
+// note, how the result type has to specified explicitly
+// otherwise, the resulting type would be Generic<unknown>
+// which may, or may not be, something you want
+const bar = instanceOfCast<Generic<string>>(Generic, foo);
+
+const date = new Date();
+// returns null
+const nullDate = instanceOfCast<Generic<boolean>>(Generic, date);
 ```
 
 - [isInstanceOfType\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/instance-of-cast.ts#L10) - allows to check, if an object is of specified type. Works for object types only. This is very similar to the `instanceOfCast<T>` function, however, instead of returning a cast object or `null`, it returns `true` or `false` instead, respectively.
@@ -202,8 +242,6 @@ deferred.invoke('bar');
 
 - [IDisposable](https://github.com/CalionVarduk/ts-utils/blob/master/src/disposable.interface.ts#L2) - represents a disposable object.
 
-- [EventHandler\<TEvent, TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/event.ts#L39) - represents a simple event handler, that allows for event publishing and event subscription. An [IEvent\<TEvent, TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/event.ts#L5) interface can be used to encapsulate the handler and allow your class consumers to only subscribe to the event, removing the option to publish it as well.
-
 - [Flag\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/flag.ts#L2) - represents a simple flag or switch object, whose value can be changed.
 
 An example:
@@ -214,7 +252,8 @@ const flag = new Flag<boolean>(false);
 // update method allows to change the flag's value
 flag.update(true);
 
-// exchange also changes the flag's value, however, it also returns the old value - here, the old variable will be equal to true
+// exchange also changes the flag's value, however, it also returns the old value
+// here, the old variable will be equal to true
 const old = flag.exchange(false); 
 
 // current will be equal to false
@@ -285,10 +324,12 @@ const skippable = new SkippableAction<string>(
 // invokes the action and starts resolving it
 skippable.invoke('foo');
 
-// calling another invoke before the first invocation resolves causes the last invocation to be queued - it will be invoked immediately after the first one resolves
+// calling another invoke before the first invocation resolves causes the last invocation to be queued
+// it will be invoked immediately after the first one resolves
 skippable.invoke('bar');
 
-// this call will cause the invoke('bar') call to be skipped - once the invoke('foo') finishes, the invoke('baz') will start resolving next
+// this call will cause the invoke('bar') call to be skipped
+//  once the invoke('foo') finishes, the invoke('baz') will start resolving next
 skippable.invoke('baz');
 
 // current allows to fetch the promise, that is currently being resolved
@@ -300,20 +341,401 @@ const promise = skippable.current();
 
 ## E. [Events](https://github.com/CalionVarduk/ts-utils/blob/master/src/events)
 
-- TODO
+Contains event publishing and event subscription functionality.
+
+- [IEvent\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/event.interface.ts#L33) - an interface representing a subscribable event.
+
+- [IEventListener\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/event.interface.ts#L14) - an interface representing an event subscription.
+
+- [EventHandler\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/event-handler.ts#L92) - an implementation of the `IEvent<TArgs>` interface. Additionally, allows to publish an event.
+
+Examples:
+```typescript
+// creates a new event handler with no subscriptions
+const handler = new EventHandler<string>();
+
+// creates a new event subscription
+handler.listen((sender, args) => console.log(sender, args));
+
+// publishes an event with null sender and 'foo' argument
+handler.publish(null, 'foo');
+
+// disposing an event handler will automatically dispose all subscriptions
+handler.dispose();
+```
+
+### Operators
+
+Event listeners are decorable with operators. By calling the [decorate](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/event.interface.ts#L29) method, you can specify how to modify the listener's behavior.
+
+Built-in operators are:
+
+- [debounce](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/debounce.ts#L10)
+
+- [delay](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/delay.ts#L8)
+
+- [filter](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/filter.ts#L9)
+
+- [skipWhile](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/skip-while.ts#L9)
+
+- [skip](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/skip.ts#L9)
+
+- [takeWhile](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/take-while.ts#L10)
+
+- [take](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/operators/take.ts#L9)
+
+Example of operator application:
+```typescript
+const handler = new EventHandler<string>();
+
+// listen method returns a newly created event listener instance
+const listener = handler.listen((sender, args) => console.log(sender, args));
+
+// decorates the event listener with operators
+// this particular decoration will cause the listener
+// to skip first 3 event publications, and then
+// only events with args being equal to either 'foo' or 'bar'
+// will be sent further to the listener's delegate
+listener.decorate(
+    skip(3),
+    filter((_, args) => ['foo', 'bar'].some(x => x === args));
+
+// ignored by the listener, first skip
+handler.publish(null, '1');
+
+// ignored by the listener, second skip
+handler.publish(null, '2');
+
+// ignored by the listener, third skip
+handler.publish(null, '3');
+
+// caught by the listener
+handler.publish(null, 'foo');
+
+// ignored by the listener due to filtering operator
+handler.publish(null, 'foobar');
+
+// caught by the listener
+handler.publish(null, 'bar');
+```
+
+It's also possible to define custom operators. The operator must be a function with the following signature:
+
+```typescript
+function yourOperatorName<TArgs>(/* your operator params */): EventListenerOperator<TArgs>;
+```
+
+[EventListenerOperator\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/event.interface.ts#L6) is a type representing a delegate, that returns an event delegate. It accepts two parameters:
+
+- `next` - a delegate, that calls the next operator, or the listener's delegate, if no other operators have been queued up.
+
+- `listener` - a reference to the event's listener. Can be used e.g. to automatically dispose the listener from inside the operator, based on some condition.
+
+Let's define a custom operator, that simply logs the published event's sender and args to the console, along with the provided title via the operator's parameter and the amount of operator invocations:
+```typescript
+function logToConsole<TArgs>(title: string): EventListenerOperator<TArgs>
+{
+    // listener parameter (the second one) is ignored in this case
+    return next =>
+    {
+        // any operator state can be defined inside here
+        // in this case, we will store the operator's invocation count
+        let invocationCount = 0;
+
+        // the operator's delegate definiton
+        return (sender, args, event) =>
+        {
+            console.log(title);
+            console.log('invocation count: ', ++invocationCount);
+            console.log('sender: ', sender);
+            console.log('args: ', args);
+
+            // after performing our operator's actions (logging to the console)
+            // we call the next delegate in the chain, with the same parameters
+            next(sender, args, event);
+        }
+    };
+}
+```
+
+And that's our operator! Let's apply it now to an event listener:
+```typescript
+handler.listen((sender, args) => console.log(sender, args))
+    .decorate(logToConsole('hello event!'));
+```
 
 ## F. [Logging](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging)
 
-- TODO
+Contains logging functionality.
+
+- [LogMessage](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging/log-message.ts#L5) - represents a logger message.
+
+- [LogType](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging/log-type.enum.ts#L2) - represents a logger message type.
+
+- [ILogger](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging/logger.interface.ts#L22) - an interface representing a subscribable logger.
+
+- [ILoggerListener](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging/logger.interface.ts#L10) - an interface representing a logger subscription.
+
+- [Logger](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging/logger.ts#L83) - an implementation of the `ILogger` interface.
+
+Examples:
+```typescript
+// creates a new logger with no listeners
+const logger = new Logger();
+
+// creates a new logger listener
+logger.listen((message, timestamp) =>
+    console.log(`[${message.type}, ${timestamp}]: ${message}`));
+
+// logs a message
+// there are also a few more specialized methods, that log a message
+logger.log(LogMessage.Information('foo'));
+
+// it's also possible to set the logger's level
+logger.logLevel = LogType.Warning;
+
+// this message won't be logged due to the current logger's log level
+// being set to Warning or above
+logger.logInformation('bar');
+
+// disposing a logger will automatically dispose all listeners
+logger.dispose();
+```
 
 ## G. [Mapping](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping)
 
-- TODO
+Contains a simple object mapping functionality.
+
+- [IMapper](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping/mapper.interface.ts#L9) - an interface representing an object mapper.
+
+- [Mapper](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping/mapper.ts#L8) - an implementation of the `IMapper` interface. Additionall,y allows to add new mapping definitions.
+
+Examples:
+```typescript
+class Foo
+{
+    public constructor(public value: number) {}
+}
+
+class Bar
+{
+    public constructor(public value: string) {}
+}
+
+// creates a new mapper without any mapping definitions
+const mapper = new Mapper();
+
+// registers mapping from number to string
+mapper.add('number', 'string', x => x.toString());
+
+// registers mapping from string to number
+mapper.add('string', 'number', x =>
+{
+    const result = Number(x);
+    return isNaN(result) ? 0 : result;
+});
+
+// registers mapping from Foo to Bar
+mapper.add(Foo, Bar, (x, m) =>
+{
+    // m is a reference to the mapper instance
+    // it can be used to recursively map other objects
+    // from within the mapping definition function
+    const value = m.map('string', x.value);
+    return new Bar(value);
+});
+
+// returns '15'
+const numberToStringResult = mapper.map('string', 15);
+
+// returns 8
+const stringToNumberResult = mapper.map('number', '8');
+
+// returns new Bar instance with value equal to '11'
+const fooToBarResult = mapper.map(Bar, new Foo(11));
+
+// throws an error, since mapping from Bar to Foo is undefined
+const barToFooResult = mapper.map(Foo, new Bar('1'));
+
+// it's also possible to define mappings between primitive types and class types
+// registers mapping from number to Foo
+mapper.add('number', Foo, x => new Foo(x));
+
+// registers mapping from Foo to number
+mapper.add(Foo, 'number', x => x.value);
+
+// returns new Foo instance with value equal to 7
+const numberToFooResult = mapper.map(Foo, 7);
+
+// returns 6
+const fooToNumberResult = mapper.map('number', new Foo(6));
+```
+
+In addition to the `map` method, the `IMapper` contains some other helpful mapping methods: `mapNullable`, `mapUndefinable`, `mapOptional` and `mapRange`. The first 3 perform mapping conditionally, only when the source object is not `null`/`undefined` (depending on the used method). `mapRange` allows to map a collection of objects to another collection.
+
+`mapRange` examples:
+```typescript
+// let's use the mapper from the previous example
+
+const barCollection: Bar[] = [
+    new Bar('1'),
+    new Bar('2'),
+    new Bar('3')
+];
+
+// returns an array with 3 new Foo instances
+// first Foo instance value is equal to 1
+// second Foo instance value is equal to 2
+// third Foo instance value is equal to 3
+const barToFooRangeResult = mapper.mapRange(Foo, barCollection);
+
+// the source collection doesn't have to contain objects of the same type
+// as long as all of its elements are mappable to the destination type
+// if at least one element is not mappable, then the mapRange method will throw
+const mixedCollection = [
+    new Bar('4'),
+    5,
+    new Bar('6')
+];
+
+// returns an array with 3 new Foo instances
+// first Foo instance value is equal to 4
+// second Foo instance value is equal to 5
+// third Foo instance value is equal to 6
+const mixedToFooRangeResult = mapper.mapRange(Foo, mixedCollection);
+```
 
 ## H. [Tasks](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks)
 
-- TODO
+Contains an asychronous, cancellable task functionality.
+
+- [ITask\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task.interface.ts#L6) - an interface representing an executable task.
+
+- [TaskResult\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task-result.ts#L4) - represents the task's result.
+
+- [TaskState](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task-state.enum.ts#L2) - represents the task's current state.
+
+- [TaskContinuationStrategy](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task-continuation-strategy.enum.ts#L2) - represents the task's continuation strategy. Used as an [ITask.then](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task.interface.ts#L26) method's parameter.
+
+- [Task\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task.ts#L172) - an implementation of the `ITask<T>` interface.
+
+Examples:
+```typescript
+// creates a new promise-based task instance
+// in Created state
+const task = new Task<string>(() => Promise.resolve('foo'));
+
+// alternatively:
+// task = Task.FromResult('foo');
+
+// executes the task, which changes its state to Running
+// returns the task's result of type TaskResult<string>
+const result = await task.execute();
+
+// since the task executed without any errors,
+// it will be in the Completed state
+
+// value will be equal to 'foo'
+const value = result.value;
+
+// create a task, that throws an error during its execution
+const errorTask = new Task<string>(() => Promise.reject(new Error()));
+
+// alternatively:
+// task = Task.FromError<string>(new Error());
+
+// since the task throws an error,
+// its state will be changed to Faulted
+const result = await task.execute();
+
+// error will be equal to the Error instance provided
+// to the Promise.reject function
+const error = result.error;
+```
+
+There exists a static instance of a completed task, which can be useful in certain situations:
+```typescript
+const completedTask = Task.COMPLETED;
+```
+
+Tasks can also be cancelled by dedicated cancellation tokens, like so:
+```typescript
+// creates a new cancellation token, that isn't cancelled yet
+const cancellationToken = new TaskCancellationToken();
+
+const task = new Task<string>(async () =>
+{
+    // simulate a long-running task
+    for (let i = 0; i < 100; ++i)
+    {
+        // checks if the cancellation token has been cancelled
+        // and, in that case, throws an error
+        cancellationToken.throwIfCancellationRequested();
+        await wait(100);
+    }
+    return 'foo';
+});
+
+// cancels the token with an optional reason
+cancellationToken.cancel('cancellation reason');
+
+// since the task is cancelled via a token,
+// its state will be changed to Cancelled
+const result = await task.execute();
+
+// error will be of type TaskCancellationError
+const error = result.error;
+
+// it's also possible to cancel the token after a specified amount of time (in ms)
+cancellationToken.cancelAfter(1000);
+```
+
+Another important functionality of `ITask<T>` is the possibility to continue it with another task. This can be achieved by calling the [ITask.then](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task.interface.ts#L26) method, like so:
+```typescript
+// first task
+const task = Task.FromResult('foo');
+
+// continuation task
+// the result parameter represents the first task's result
+// which can be used to create the follow-up task
+const continuationTask = task.then(result =>
+    Task.FromResult([result.value, 'bar']));
+
+const fullResult = await continuationTask.execute();
+
+// value will be an array of strings, containing two elements: 'foo' and 'bar'
+const value = fullResult.value;
+```
+
+[ITask.then](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task.interface.ts#L26) method has an optional second parameter of type [TaskContinuationStrategy](https://github.com/CalionVarduk/ts-utils/blob/master/src/tasks/task-continuation-strategy.enum.ts#L2). It specifies, in which scenarios to continue the first task, based on its state. By default, all task states are continued.
+
+If a continuation task is not invoked due to the continuation strategy, then its state will be changed to `Discontinued`.
+
+Another useful `ITask` methods are:
+- `join` - runs mutliple tasks concurrently and returns a new task, that resolves after all tasks have been resolved (such a joined task can also be created by calling the `Task.All` function).
+- `race` - runs multiple tasks concurrently and returns a new task, that resolves after any task has been resolved (such a race task can also be created by calling the `Task.Any` function).
+- `map` - allows to map task's result to another type. It will only be executed for task's, that complete successfuly.
 
 ## I. [Collections](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections)
 
-- TODO
+Contains a few useful collections and data structures, as well as some collection manipulation algorithms.
+
+- [Enumerable\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/enumerable.ts#L23) - represents an enumerable collection, which can be manipulated via its methods.
+
+- [Heap\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/heap.ts#L65) - represents a heap data structure.
+
+- [Iteration](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/iteration.ts#L43) - contains a few algorithms that allow to manipulate collections.
+
+- [KeyedCollection\<TKey, TEntity\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/keyed-collection.ts#L47) - represents a keyed collections of entities.
+
+- [List\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/list.ts#L80) - represents a linked list data structure.
+
+- [Pair\<T, U\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/pair.ts#L2) - represents a pair of objects.
+
+- [Queue\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/queue.ts#L20) - represents a queue data structure.
+
+- [Stack\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/stack.ts#L5) - represents a stack data structure.
+
+- [UnorderedMap\<TKey, TEntity\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/unordered-map.ts#L12) - represents an unordered map data structure.
+
+- [UnorderedSet\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/collections/unordered-set.ts#L8) - represents an unordered set data structure.
