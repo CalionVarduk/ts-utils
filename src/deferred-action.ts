@@ -1,4 +1,3 @@
-import { Nullable } from './types/nullable';
 import { isNull } from './functions/is-null';
 
 /** Represents deferred action's parameters. */
@@ -26,7 +25,7 @@ export class DeferredAction<TArgs = any>
     /** Deferred action's function to be executed. */
     public readonly action: (args?: TArgs) => void;
 
-    private _timeoutHandle: Nullable<number>;
+    private _timeoutHandle: any;
 
     /**
      * Creates a new deferred action object.
@@ -62,7 +61,7 @@ export class DeferredAction<TArgs = any>
     {
         if (this.isInvoking)
         {
-            clearTimeout(this._timeoutHandle!);
+            clearTimeout(this._timeoutHandle);
             this._timeoutHandle = null;
             return true;
         }
