@@ -14,7 +14,7 @@ export function debounce<TArgs>(ms: number): EventListenerOperator<TArgs>
         if (ms < 0)
             return null;
 
-        let timeoutHandle: Nullable<number> = null;
+        let timeoutHandle: any = null;
         return (s, a, e) =>
             {
                 if (!isNull(timeoutHandle))

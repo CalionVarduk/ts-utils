@@ -1,5 +1,4 @@
 import { isNull } from './functions/is-null';
-import { Nullable } from './types/nullable';
 
 /** Represents repeated action's invocation result. */
 export enum RepeatedActionResult
@@ -41,7 +40,7 @@ export class RepeatedAction<TArgs = any>
     /** Repeated action's function to be executed. */
     public readonly action: (args?: TArgs) => RepeatedActionResult;
 
-    private _intervalHandle: Nullable<number>;
+    private _intervalHandle: any;
     private _invocationCount: number;
 
     /**
@@ -89,7 +88,7 @@ export class RepeatedAction<TArgs = any>
 
     private _stopImpl(): void
     {
-        clearInterval(this._intervalHandle!);
+        clearInterval(this._intervalHandle);
         this._intervalHandle = null;
         this._invocationCount = 0;
     }
