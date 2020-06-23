@@ -1,7 +1,7 @@
 import { IMapper } from './mapper.interface';
 import { ObjectType, PrimitiveTypeNames, TypeInstance, Nullable, Undefinable, Optional } from '../types';
 import { Mapping } from './mapping';
-import { Assert, isUndefined, isNull, isDefined } from '../functions';
+import { Assert, isUndefined, isNull, isDefined, DynamicCastType } from '../functions';
 import { Iteration } from '../collections';
 
 /** Represents an object mapper. */
@@ -57,10 +57,10 @@ export class Mapper
         return this;
     }
 
-    public map<TDestination extends PrimitiveTypeNames | ObjectType>(
-        destinationType: TDestination,
+    public map<TDestination extends PrimitiveTypeNames | object>(
+        destinationType: DynamicCastType<TDestination>,
         source: any):
-        TypeInstance<TDestination>
+        TypeInstance<DynamicCastType<TDestination>>
     {
         const typeOfSource = typeof source;
 
@@ -79,34 +79,34 @@ export class Mapper
         return mapping(source, this);
     }
 
-    public mapNullable<TDestination extends PrimitiveTypeNames | ObjectType>(
-        destinationType: TDestination,
+    public mapNullable<TDestination extends PrimitiveTypeNames | object>(
+        destinationType: DynamicCastType<TDestination>,
         source: any):
-        Nullable<TypeInstance<TDestination>>
+        Nullable<TypeInstance<DynamicCastType<TDestination>>>
     {
         return isNull(source) ? null : this.map(destinationType, source);
     }
 
-    public mapUndefinable<TDestination extends PrimitiveTypeNames | ObjectType>(
-        destinationType: TDestination,
+    public mapUndefinable<TDestination extends PrimitiveTypeNames | object>(
+        destinationType: DynamicCastType<TDestination>,
         source: any):
-        Undefinable<TypeInstance<TDestination>>
+        Undefinable<TypeInstance<DynamicCastType<TDestination>>>
     {
         return isUndefined(source) ? void(0) : this.map(destinationType, source);
     }
 
-    public mapOptional<TDestination extends PrimitiveTypeNames | ObjectType>(
-        destinationType: TDestination,
+    public mapOptional<TDestination extends PrimitiveTypeNames | object>(
+        destinationType: DynamicCastType<TDestination>,
         source: any):
-        Optional<TypeInstance<TDestination>>
+        Optional<TypeInstance<DynamicCastType<TDestination>>>
     {
         return isDefined(source) ? this.map(destinationType, source) : source;
     }
 
-    public mapRange<TDestination extends PrimitiveTypeNames | ObjectType>(
-        destinationType: TDestination,
+    public mapRange<TDestination extends PrimitiveTypeNames | object>(
+        destinationType: DynamicCastType<TDestination>,
         source: Iterable<any>):
-        TypeInstance<TDestination>[]
+        TypeInstance<DynamicCastType<TDestination>>[]
     {
         return Iteration.ToArray(
             Iteration.Map(source, s => this.map(destinationType, s)));

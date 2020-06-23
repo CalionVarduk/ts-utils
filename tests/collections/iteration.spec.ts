@@ -1891,6 +1891,7 @@ test('ForEach should invoke callback for each element',
             expect(x).toBe(elements[index]);
             expect(idx).toBe(index++);
         });
+        expect(index).toBe(elements.length);
     }
 );
 
