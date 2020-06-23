@@ -1,6 +1,6 @@
 {
   "name": "frl-ts-utils",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A simple project containing a few QOL utils for TypeScript",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
