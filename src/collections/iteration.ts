@@ -44,7 +44,7 @@ export namespace Iteration
 {
     /**
      * Creates an empty iterable.
-     * @return An empty iterable.
+     * @returns An empty iterable.
      */
     export function Empty<T>(): Iterable<T>
     {
@@ -56,7 +56,7 @@ export namespace Iteration
      * If `to` is not provided, then the collection is infinite.
      * @param from Value to start with.
      * @param to Optional value to end with.
-     * A growing sequence of numbers, starting with `from` and ending with `to`, if provided, otherwise the sequence is infinite.
+     * @returns A growing sequence of numbers, starting with `from` and ending with `to`, if provided, otherwise the sequence is infinite.
      */
     export function Range(
         from: number,
