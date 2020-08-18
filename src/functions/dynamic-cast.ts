@@ -1,4 +1,4 @@
-import { ObjectType } from '../types/object-type';
+import { ObjectType, AbstractObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
 import { primitiveCast, isPrimitiveOfType } from './primitive-cast';
 import { instanceOfCast, isInstanceOfType } from './instance-of-cast';
@@ -8,7 +8,7 @@ import { TypeInstance } from '../types/type-instance';
 
 /** DynamicCastType type alias. */
 export type DynamicCastType<T extends object | PrimitiveTypeNames> =
-    T extends object ? ObjectType<T> : T;
+    T extends object ? ObjectType<T> | AbstractObjectType<T> : T;
 
 /**
  * Casts an object to the provided type, if that object is of that type.
@@ -24,7 +24,7 @@ export function dynamicCast<TType extends object | PrimitiveTypeNames>(
 {
     return typeof targetType === 'string' ?
         primitiveCast(reinterpretCast<PrimitiveTypeNames>(targetType), obj) :
-        instanceOfCast(reinterpretCast<ObjectType>(targetType), obj);
+        instanceOfCast(reinterpretCast<ObjectType | AbstractObjectType>(targetType), obj);
 }
 
 /**
@@ -40,5 +40,5 @@ export function isOfType<TType extends object | PrimitiveTypeNames>(
 {
     return typeof targetType === 'string' ?
         isPrimitiveOfType(reinterpretCast<PrimitiveTypeNames>(targetType), obj) :
-        isInstanceOfType(reinterpretCast<ObjectType>(targetType), obj);
+        isInstanceOfType(reinterpretCast<ObjectType | AbstractObjectType>(targetType), obj);
 }

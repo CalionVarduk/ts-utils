@@ -3,6 +3,8 @@ import { dynamicCast, isOfType } from '../../src/functions/dynamic-cast';
 class Foo {}
 class Bar extends Foo {}
 class Baz {}
+abstract class AbstractFoo {}
+class ConcreteBar extends AbstractFoo {}
 
 test('dynamic cast should return null if source is not of correct type',
     () =>
@@ -10,6 +12,7 @@ test('dynamic cast should return null if source is not of correct type',
         const foo = new Foo();
         const bar = new Bar();
         const baz = new Baz();
+        const nul = null;
         const str = 'foo';
         const num = 1;
         const bol = false;
@@ -20,6 +23,7 @@ test('dynamic cast should return null if source is not of correct type',
         const fooResult = dynamicCast(Bar, foo);
         const barResult = dynamicCast(Baz, bar);
         const bazResult = dynamicCast(Foo, baz);
+        const nulResult = dynamicCast(AbstractFoo, nul);
         const strResult = dynamicCast('number', str);
         const numResult = dynamicCast('boolean', num);
         const bolResult = dynamicCast('string', bol);
@@ -32,6 +36,7 @@ test('dynamic cast should return null if source is not of correct type',
         expect(fooResult).toBeNull();
         expect(barResult).toBeNull();
         expect(bazResult).toBeNull();
+        expect(nulResult).toBeNull();
         expect(strResult).toBeNull();
         expect(numResult).toBeNull();
         expect(bolResult).toBeNull();
@@ -50,6 +55,7 @@ test('dynamic cast should return source if source is of correct type',
         const foo = new Foo();
         const bar = new Bar();
         const baz = new Baz();
+        const cbar = new ConcreteBar();
         const str = 'foo';
         const num = 1;
         const bol = false;
@@ -60,6 +66,7 @@ test('dynamic cast should return source if source is of correct type',
         const fooResult = dynamicCast(Foo, foo);
         const barResult = dynamicCast(Foo, bar);
         const bazResult = dynamicCast(Baz, baz);
+        const cbarResult = dynamicCast(AbstractFoo, cbar);
         const strResult = dynamicCast('string', str);
         const numResult = dynamicCast('number', num);
         const bolResult = dynamicCast('boolean', bol);
@@ -71,6 +78,7 @@ test('dynamic cast should return source if source is of correct type',
         expect(fooResult).toBe(foo);
         expect(barResult).toBe(bar);
         expect(bazResult).toBe(baz);
+        expect(cbarResult).toBe(cbar);
         expect(strResult).toBe(str);
         expect(numResult).toBe(num);
         expect(bolResult).toBe(bol);
@@ -88,6 +96,7 @@ test('is of type should return false if source is not of correct type',
         const foo = new Foo();
         const bar = new Bar();
         const baz = new Baz();
+        const nul = null;
         const str = 'foo';
         const num = 1;
         const bol = false;
@@ -98,6 +107,7 @@ test('is of type should return false if source is not of correct type',
         const fooResult = isOfType(Bar, foo);
         const barResult = isOfType(Baz, bar);
         const bazResult = isOfType(Foo, baz);
+        const nulResult = isOfType(AbstractFoo, nul);
         const strResult = isOfType('number', str);
         const numResult = isOfType('boolean', num);
         const bolResult = isOfType('string', bol);
@@ -110,6 +120,7 @@ test('is of type should return false if source is not of correct type',
         expect(fooResult).toBe(false);
         expect(barResult).toBe(false);
         expect(bazResult).toBe(false);
+        expect(nulResult).toBe(false);
         expect(strResult).toBe(false);
         expect(numResult).toBe(false);
         expect(bolResult).toBe(false);
@@ -128,6 +139,7 @@ test('is of type should return true if source is of correct type',
         const foo = new Foo();
         const bar = new Bar();
         const baz = new Baz();
+        const cbar = new ConcreteBar();
         const str = 'foo';
         const num = 1;
         const bol = false;
@@ -138,6 +150,7 @@ test('is of type should return true if source is of correct type',
         const fooResult = isOfType(Foo, foo);
         const barResult = isOfType(Foo, bar);
         const bazResult = isOfType(Baz, baz);
+        const cbarResult = isOfType(AbstractFoo, cbar);
         const strResult = isOfType('string', str);
         const numResult = isOfType('number', num);
         const bolResult = isOfType('boolean', bol);
@@ -149,6 +162,7 @@ test('is of type should return true if source is of correct type',
         expect(fooResult).toBe(true);
         expect(barResult).toBe(true);
         expect(bazResult).toBe(true);
+        expect(cbarResult).toBe(true);
         expect(strResult).toBe(true);
         expect(numResult).toBe(true);
         expect(bolResult).toBe(true);
