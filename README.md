@@ -73,9 +73,11 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 - [Ref\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/ref.ts#L2) - represents a reference type for value type `T`.
 
-- [Stringifier\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/stringifier.ts#L2) - represents a delegate that converts an object of type `T` to `string`.
+- [Replace\<T, U\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/replace.ts#L2) - represents a type with all properties from `T`, where properties with the same key as in the `U` type are replaced by the `U` type. 
 
-- [TypeInstance\<TType\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/type-instance.ts#L2) - represents an instance type of either an `ObjectType<T>` or `PrimitiveTypeNames` type.
+- [Stringifier\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/stringifier.ts#L4) - represents a delegate that converts an object of type `T` to `string`.
+
+- [TypeInstance\<TType\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/type-instance.ts#L5) - represents an instance type of either an `ObjectType<T>` or `PrimitiveTypeNames` type.
 
 - [Undefinable\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/undefinable.ts#L2) - represents a union type of `T` and `undefined`.
 
@@ -223,7 +225,7 @@ result.trim(); // runtime error, instead of a compilation error
 
 ## D. Classes & Interfaces
 
-- [DeferredAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/deferred-action.ts#L15) - represents an action that should be invoked after a specified amount of time has passed. This class allows e.g. to create a simple debouncing mechanism, since every new invocation request resets the timer.
+- [DeferredAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/deferred-action.ts#L14) - represents an action that should be invoked after a specified amount of time has passed. This class allows e.g. to create a simple debouncing mechanism, since every new invocation request resets the timer.
 
 An example:
 ```typescript
@@ -282,7 +284,7 @@ const value = lazy.value;
 
 - [Mixin\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/mixin.ts#L17) - represents a mixin object that can be merged together with other objects.
 
-- [RepeatedAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/repeated-action.ts#L24) - represents a stoppable action that is continuously invoked at a specified interval. This class allows e.g. to create a simple polling mechanism, that stops after a desired result has been achieved.
+- [RepeatedAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/repeated-action.ts#L23) - represents a stoppable action that is continuously invoked at a specified interval. This class allows e.g. to create a simple polling mechanism, that stops after a desired result has been achieved.
 
 An example:
 ```typescript
@@ -313,7 +315,7 @@ repeated.invoke('bar');
 
 - [Rng](https://github.com/CalionVarduk/ts-utils/blob/master/src/rng.ts#L2) - represents a pseudorandom number generator.
 
-- [Semaphore](https://github.com/CalionVarduk/ts-utils/blob/master/src/rng.ts#L7) - represents a semaphore variable, that limits concurrent access to an asynchronous block of code. There also exists a [Mutex](https://github.com/CalionVarduk/ts-utils/blob/master/src/rng.ts#L72) class, that acts as a simple lock.
+- [Semaphore](https://github.com/CalionVarduk/ts-utils/blob/master/src/semaphore.ts#L7) - represents a semaphore variable, that limits concurrent access to an asynchronous block of code. There also exists a [Mutex](https://github.com/CalionVarduk/ts-utils/blob/master/src/semaphore.ts#L72) class, that acts as a simple lock.
 
 - [SkippableAction\<TArgs\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/skippable-action.ts#L10) - represents an asynchronous action that skips all intermediate invocations.
 
@@ -510,7 +512,7 @@ logger.dispose();
 
 Contains a simple object mapping functionality.
 
-- [IMapper](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping/mapper.interface.ts#L9) - an interface representing an object mapper.
+- [IMapper](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping/mapper.interface.ts#L10) - an interface representing an object mapper.
 
 - [Mapper](https://github.com/CalionVarduk/ts-utils/blob/master/src/mapping/mapper.ts#L8) - an implementation of the `IMapper` interface. Additionall,y allows to add new mapping definitions.
 
