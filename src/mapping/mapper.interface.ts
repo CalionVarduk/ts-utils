@@ -1,4 +1,4 @@
-import { ObjectType } from '../types/object-type';
+import { ObjectType, AbstractObjectType } from '../types/object-type';
 import { PrimitiveTypeNames } from '../types/primitive';
 import { TypeInstance } from '../types/type-instance';
 import { Nullable } from '../types/nullable';
@@ -14,7 +14,9 @@ export interface IMapper {
      * @param destinationType Destination type to check.
      * @returns `true`, if mapping exists, otherwise `false`.
      */
-    has<TSource extends PrimitiveTypeNames | ObjectType, TDestination extends PrimitiveTypeNames | ObjectType>(
+    has<
+        TSource extends PrimitiveTypeNames | ObjectType | AbstractObjectType,
+        TDestination extends PrimitiveTypeNames | ObjectType | AbstractObjectType>(
         sourceType: TSource,
         destinationType: TDestination):
         boolean;
