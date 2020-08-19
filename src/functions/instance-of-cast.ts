@@ -1,4 +1,4 @@
-import { ObjectType } from '../types/object-type';
+import { ObjectType, AbstractObjectType } from '../types/object-type';
 import { Nullable } from '../types/nullable';
 
 /**
@@ -7,7 +7,7 @@ import { Nullable } from '../types/nullable';
  * @param obj Object to check.
  * @returns If type `TType` exists in the prototype chain of `obj`, then `true`, otherwise `false`.
  */
-export function isInstanceOfType<TType>(targetType: ObjectType<TType>, obj: any): obj is TType
+export function isInstanceOfType<TType>(targetType: ObjectType<TType> | AbstractObjectType<TType>, obj: any): obj is TType
 {
     return obj instanceof targetType;
 }
@@ -18,7 +18,7 @@ export function isInstanceOfType<TType>(targetType: ObjectType<TType>, obj: any)
  * @param obj Object to cast.
  * @returns If type `TType` exists in the prototype chain of `obj`, then `obj` cast to `TType`, otherwise `null`.
  */
-export function instanceOfCast<TType>(targetType: ObjectType<TType>, obj: any): Nullable<TType>
+export function instanceOfCast<TType>(targetType: ObjectType<TType> | AbstractObjectType<TType>, obj: any): Nullable<TType>
 {
     return isInstanceOfType(targetType, obj) ? obj : null;
 }

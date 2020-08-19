@@ -61,6 +61,8 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 - [ObjectType\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/object-type.ts#L2) - represents a constructor of type `T`.
 
+- [AbstractObjectType\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/object-type.ts#L5) - represents a constructor of an abstract type `T`.
+
 - [Optional\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/optional.ts#L5) - represents a union type of `T`, `null` and `undefined`.
 
 - [Primitive](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/primitive.ts#L2) - represents a union type of `string`, `number` and `boolean`.
@@ -82,6 +84,8 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 - [makeRef\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/ref.ts#L13) - creates a new `Ref<T>` object with the provided value.
 
 - [toDeepReadonly\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/deep-readonly.ts#L31) - casts an object of type `T` to type `DeepReadonly<T>`.
+
+- [isDisposable](https://github.com/CalionVarduk/ts-utils/blob/master/src/disposable.interface.ts#L15) - checks whether or not an object implements an `IDisposable` interface by having a method called `dispose`.
 
 - [Assert](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/assert.ts#L21) - a namespace containing a few useful assertion functions. These assertion functions either pass and return the provided parameter (except for [Assert.True](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/assert.ts#L171) and [Assert.False](https://github.com/CalionVarduk/ts-utils/blob/master/src/functions/assert.ts#L183) functions) or throw an `Error`.
 
@@ -240,7 +244,7 @@ deferred.stop();
 deferred.invoke('bar');
 ```
 
-- [IDisposable](https://github.com/CalionVarduk/ts-utils/blob/master/src/disposable.interface.ts#L2) - represents a disposable object.
+- [IDisposable](https://github.com/CalionVarduk/ts-utils/blob/master/src/disposable.interface.ts#L4) - represents a disposable object.
 
 - [Flag\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/flag.ts#L2) - represents a simple flag or switch object, whose value can be changed.
 

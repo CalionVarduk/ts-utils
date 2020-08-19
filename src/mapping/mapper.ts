@@ -1,5 +1,5 @@
 import { IMapper } from './mapper.interface';
-import { ObjectType, PrimitiveTypeNames, TypeInstance, Nullable, Undefinable, Optional } from '../types';
+import { ObjectType, PrimitiveTypeNames, TypeInstance, Nullable, Undefinable, Optional, AbstractObjectType } from '../types';
 import { Mapping } from './mapping';
 import { Assert, isUndefined, isNull, isDefined, DynamicCastType } from '../functions';
 import { Iteration } from '../collections';
@@ -9,17 +9,23 @@ export class Mapper
     implements
     IMapper
 {
-    private readonly _mappings: Map<ObjectType | PrimitiveTypeNames, Map<ObjectType | PrimitiveTypeNames, Mapping<any, any>>>;
+    private readonly _mappings: Map<
+        ObjectType | AbstractObjectType | PrimitiveTypeNames,
+        Map<ObjectType | AbstractObjectType | PrimitiveTypeNames, Mapping<any, any>>>;
 
     /**
      * Creates a new Mapper object.
      */
     public constructor()
     {
-        this._mappings = new Map<ObjectType | PrimitiveTypeNames, Map<ObjectType | PrimitiveTypeNames, Mapping<any, any>>>();
+        this._mappings = new Map<
+            ObjectType | AbstractObjectType | PrimitiveTypeNames,
+            Map<ObjectType | AbstractObjectType | PrimitiveTypeNames, Mapping<any, any>>>();
     }
 
-    public has<TSource extends PrimitiveTypeNames | ObjectType, TDestination extends PrimitiveTypeNames | ObjectType>(
+    public has<
+        TSource extends PrimitiveTypeNames | ObjectType | AbstractObjectType,
+        TDestination extends PrimitiveTypeNames | ObjectType | AbstractObjectType>(
         sourceType: TSource,
         destinationType: TDestination):
         boolean
@@ -36,7 +42,9 @@ export class Mapper
      * @throws An `Error`, when mapping from `sourceType` to `destinationType` already exists.
      * @returns `this`.
      */
-    public add<TSource extends PrimitiveTypeNames | ObjectType, TDestination extends PrimitiveTypeNames | ObjectType>(
+    public add<
+        TSource extends PrimitiveTypeNames | ObjectType | AbstractObjectType,
+        TDestination extends PrimitiveTypeNames | ObjectType | AbstractObjectType>(
         sourceType: TSource,
         destinationType: TDestination,
         mapping: Mapping<TypeInstance<TSource>, TypeInstance<TDestination>>):
