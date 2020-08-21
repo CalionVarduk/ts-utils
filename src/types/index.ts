@@ -14,6 +14,8 @@ export * from './object-type';
 export * from './optional';
 export * from './primitive';
 export * from './ref';
+export * from './reject';
+export * from './replace';
 export * from './stringifier';
 export * from './type-instance';
 export * from './undefinable';

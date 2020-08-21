@@ -73,7 +73,9 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 - [Ref\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/ref.ts#L2) - represents a reference type for value type `T`.
 
-- [Replace\<T, U\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/replace.ts#L2) - represents a type with all properties from `T`, where properties with the same key as in the `U` type are replaced by the `U` type. 
+- [Reject\<T, K\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/reject.ts#L2) - represents a type with all properties from `T`, without properties with keys from `K`.
+
+- [Replace\<T, U\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/replace.ts#L4) - represents a type with all properties from `T`, where properties with the same key as in the `U` type are replaced by the `U` type. 
 
 - [Stringifier\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/stringifier.ts#L4) - represents a delegate that converts an object of type `T` to `string`.
 
