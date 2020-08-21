@@ -1,2 +1,4 @@
+import { Reject } from './reject';
+
 /** Replace type alias. */
-export type Replace<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;
+export type Replace<T, U> = Reject<T, keyof U> & U;
