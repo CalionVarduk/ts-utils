@@ -29,6 +29,8 @@ If you are using `yarn`, then go with the `yarn add frl-ts-utils` command.
 
 - [Delegate\<TArgs, TReturnType\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/delegate.ts#L2) - represents a delegate type, that returns `TReturnType` and has parameters with types represented by the `TArgs` tuple.
 
+- [ExtractDelegate\<T\>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/delegate.ts#L6) - allows to extract `Delegate<TArgs, TReturnType>` type from `T`.
+
 - [EmptyObject](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/empty-object.ts#L2) - represents an object with no properties.
 
 - [Ensured<T>](https://github.com/CalionVarduk/ts-utils/blob/master/src/types/ensured.ts#L4) - removes `null` and `undefined` from type `T`.
