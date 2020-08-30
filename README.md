@@ -474,6 +474,8 @@ handler.listen((sender, args) => console.log(sender, args))
     .decorate(logToConsole('hello event!'));
 ```
 
+- [MessageBroker](https://github.com/CalionVarduk/ts-utils/blob/master/src/events/message-broker.ts#L9) - a generic collection of event handlers registered under user-defined names.
+
 ## F. [Logging](https://github.com/CalionVarduk/ts-utils/blob/master/src/logging)
 
 Contains logging functionality.
