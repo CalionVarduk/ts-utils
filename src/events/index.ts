@@ -7,3 +7,4 @@ export * from './operators/take';
 export * from './operators/take-while';
 export * from './event-handler';
 export * from './event.interface';
+export * from './message-broker';

@@ -80,7 +80,7 @@ test('get should return value, when key exists, for complex objects',
     }
 );
 
-test('get should return null, when key doesn\'t exist',
+test('tryGet should return null, when key doesn\'t exist',
     () =>
     {
         const key = 0;
