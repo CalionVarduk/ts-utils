@@ -1,6 +1,10 @@
 import { KeyedCollection } from '../../src/collections/keyed-collection';
 import { KeySelector } from '../../src/collections/key-selector';
 import { Stringifier } from '../../src/types/stringifier';
+import each from 'jest-each';
+import { Undefinable } from '../../src/types';
+import { isDefined } from '../../src/functions';
+import { Iteration } from '../../src/collections/iteration';
 
 class ComplexKey
 {
@@ -1429,6 +1433,39 @@ test('clearLookups should remove all lookups and clear them from existing entiti
 
         expect(collection.lookupCount).toBe(0);
         lookups.forEach(l => expect(l.length).toBe(0));
+    }
+);
+
+each([
+    ['foo', 'foo'],
+    [void(0), 'collection']
+])
+.test('cloneSchema should create a new collection with the same attributes (%#): name: %s, expected name: %s',
+    (name: Undefinable<string>, expectedName: string) =>
+    {
+        const collection = new KeyedCollection<string, Dto>('collection', d => d.id);
+        collection.addLookup('lookup1', d => d.complexId, c => `${c.id}|${c.no}`);
+        collection.addLookup('lookup2', d => d.complexId, c => `${c.id}|${c.no}`);
+        collection.addLookup('lookup3', d => d.complexId, c => `${c.id}|${c.no}`);
+        collection.add(new Dto());
+
+        const result = collection.cloneSchema(name);
+
+        expect(result.length).toBe(0);
+        expect(result.name).toBe(expectedName);
+        expect(result.primaryLookup.keySelector).toBe(collection.primaryLookup.keySelector);
+        expect(result.primaryLookup.keyStringifier).toBe(collection.primaryLookup.keyStringifier);
+        expect(result.lookupCount).toBe(collection.lookupCount);
+
+        for (const lookupName of result.lookupNames())
+        {
+            const resultLookup = result.getLookup(lookupName);
+            const collectionLookup = collection.tryGetLookup(lookupName);
+            expect(collectionLookup).not.toBeNull();
+            expect(resultLookup.name).toBe(`LKP_${expectedName}_${lookupName}`);
+            expect(resultLookup.keySelector).toBe(collectionLookup!.keySelector);
+            expect(resultLookup.keyStringifier).toBe(collectionLookup!.keyStringifier);
+        }
     }
 );
 

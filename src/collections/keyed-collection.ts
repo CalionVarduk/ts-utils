@@ -12,6 +12,7 @@ import { isNull } from '../functions/is-null';
 import { Iteration } from './iteration';
 import { deepReadonlyCast } from '../functions/readonly-cast';
 import { createIterable } from '../functions/create-iterable';
+import { isDefined } from '../functions/is-defined';
 
 function decoratePrimaryLookupName(collectionName: string): string
 {
@@ -503,6 +504,26 @@ export class KeyedCollection<TKey, TEntity>
             lookup.clear();
 
         this._lookups.clear();
+    }
+
+    /**
+     * Creates a new keyed collection with the same definition and lookups.
+     * @param name An optional cloned collection's name.
+     * @returns A new keyed collection.
+     */
+    public cloneSchema(name?: string): KeyedCollection<TKey, TEntity>
+    {
+        const result = new KeyedCollection<TKey, TEntity>(
+            isDefined(name) ? name : this.name,
+            this.primaryLookup.keySelector,
+            this.primaryLookup.keyStringifier);
+
+        for (const lookupName of this.lookupNames())
+        {
+            const lookup = this.getLookup(lookupName);
+            result.addLookup(lookupName, lookup.keySelector, lookup.keyStringifier);
+        }
+        return result;
     }
 
     public lookupNames(): Iterable<string>
