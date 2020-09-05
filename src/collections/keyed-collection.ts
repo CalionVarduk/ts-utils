@@ -49,6 +49,30 @@ export class KeyedCollection<TKey, TEntity>
     implements
     IReadonlyKeyedCollection<TKey, TEntity>
 {
+    /**
+     * Creates a new keyed collection with the same definition and lookups as in the provided collection.
+     * @param collection Collection to clone schema from.
+     * @param name An optional cloned collection's name.
+     * @returns A new keyed collection.
+     */
+    public static CloneSchema<K, E>(
+        collection: IReadonlyKeyedCollection<K, E>,
+        name?: string):
+        KeyedCollection<K, E>
+    {
+        const result = new KeyedCollection<K, E>(
+            isDefined(name) ? name : collection.name,
+            collection.primaryLookup.keySelector,
+            collection.primaryLookup.keyStringifier);
+
+        for (const lookupName of collection.lookupNames())
+        {
+            const lookup = collection.getLookup(lookupName);
+            result.addLookup(lookupName, lookup.keySelector, lookup.keyStringifier);
+        }
+        return result;
+    }
+
     public get name(): string
     {
         return extractCollectionName(this._primaryLookup);
@@ -504,26 +528,6 @@ export class KeyedCollection<TKey, TEntity>
             lookup.clear();
 
         this._lookups.clear();
-    }
-
-    /**
-     * Creates a new keyed collection with the same definition and lookups.
-     * @param name An optional cloned collection's name.
-     * @returns A new keyed collection.
-     */
-    public cloneSchema(name?: string): KeyedCollection<TKey, TEntity>
-    {
-        const result = new KeyedCollection<TKey, TEntity>(
-            isDefined(name) ? name : this.name,
-            this.primaryLookup.keySelector,
-            this.primaryLookup.keyStringifier);
-
-        for (const lookupName of this.lookupNames())
-        {
-            const lookup = this.getLookup(lookupName);
-            result.addLookup(lookupName, lookup.keySelector, lookup.keyStringifier);
-        }
-        return result;
     }
 
     public lookupNames(): Iterable<string>
